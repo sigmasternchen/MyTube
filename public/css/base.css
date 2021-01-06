@@ -5,3 +5,11 @@
 .navbar {
     margin-bottom: 50px;
 }
+
+.hidden {
+    height: 1px;
+    width: 1px;
+    position: absolute;
+    top: -10px;
+    left: -1px;
+}

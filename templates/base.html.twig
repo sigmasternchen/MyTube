@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset("css/mdb.min.css") }}">
     <link rel="stylesheet" href="{{ asset("css/mdb.rtl.min.css") }}">
     <link rel="stylesheet" href="{{ asset("css/base.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/toasts.css") }}">
     {% block stylesheets %}{% endblock %}
 </head>
 <body class="bg-grey">
@@ -67,6 +68,8 @@
     {% block body %}{% endblock %}
 </div>
 <script src="{{ asset("js/mdb.min.js") }}"></script>
+<script src="{{ asset("js/clipboard.js") }}"></script>
+<script src="{{ asset("js/toasts.js") }}"></script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

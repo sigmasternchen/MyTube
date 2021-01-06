@@ -107,6 +107,12 @@ class DashboardController extends AbstractController
         $user = $this->userService->getLoggedInUser();
         $links = $this->videoLinkService->getAll($user);
 
+        foreach ($links as $link) {
+            $link->setCustomId($this->uuidMapper->toString($link->getId()));
+            $video = $link->getVideo();
+            $video->setCustomId($this->uuidMapper->toString($video->getId()));
+        }
+
         return $this->render("dashboard/links.html.twig", [
             "links" => $links
         ]);

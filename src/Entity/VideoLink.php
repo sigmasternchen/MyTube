@@ -21,6 +21,7 @@ class VideoLink
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private $id;
+    private $customId;
 
     /**
      * @ORM\ManyToOne(targetEntity=Video::class, inversedBy="videoLinks")
@@ -145,6 +146,17 @@ class VideoLink
     {
         $this->comment = $comment;
 
+        return $this;
+    }
+
+    public function getCustomId(): string
+    {
+        return $this->customId;
+    }
+
+    public function setCustomId($customId): self
+    {
+        $this->customId = $customId;
         return $this;
     }
 }

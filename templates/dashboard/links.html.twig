@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Links{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/links.css") }}">
+{% endblock %}
+
+{% block body %}
+    Links
+    {% for link in links %}
+        <div class="link container-fluid bg-light shadow-5">
+            Blabla
+        </div>
+    {% endfor %}
+{% endblock %}

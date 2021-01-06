@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomeController extends AbstractController
+class DashboardController extends AbstractController
 {
     private $userService;
     private $videoService;
@@ -31,7 +31,7 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="app_dashboard")
      */
-    public function home(): Response
+    public function dashboard(): Response
     {
         if (!$this->isGranted("ROLE_USER")) {
             // not logged in
@@ -45,7 +45,7 @@ class HomeController extends AbstractController
             $video->setCustomId($this->uuidMapper->toString($video->getId()));
         }
 
-        return $this->render("home/dashboard.html.twig", [
+        return $this->render("dashboard/dashboard.html.twig", [
             "videos" => $videos
         ]);
     }
@@ -70,8 +70,19 @@ class HomeController extends AbstractController
             }
         }
 
-        return $this->render("home/upload.html.twig", [
+        return $this->render("dashboard/upload.html.twig", [
             "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/links", name="app_links")
+     */
+    public function links(): Response
+    {
+
+        return $this->render("dashboard/links.html.twig", [
+            "links" => ["1", "2", "3"]
         ]);
     }
 }

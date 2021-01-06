@@ -45,4 +45,15 @@ class VideoRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }*/
+
+    public function save(Video $video)
+    {
+        $this->_em->persist($video);
+        $this->_em->flush();
+    }
+
+    public function update()
+    {
+        $this->_em->flush();
+    }
 }

@@ -13,6 +13,11 @@ use Ramsey\Uuid\UuidInterface;
  */
 class Video
 {
+    public const WAITING = 1;
+    public const PROCESSING_THUMBNAIL = 2;
+    public const PROCESSING_TRANSCODE = 3;
+    public const DONE = 4;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
@@ -47,10 +52,10 @@ class Video
      */
     private $tags = [];
 
-    public function __construct()
-    {
-        $this->uploaded = new DateTimeImmutable();
-    }
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $state = self::WAITING;
 
     public function getId(): ?UuidInterface
     {
@@ -72,6 +77,12 @@ class Video
     public function getUploaded(): ?DateTimeImmutable
     {
         return $this->uploaded;
+    }
+
+    public function setUploaded(): self
+    {
+        $this->uploaded = new DateTimeImmutable();
+        return $this;
     }
 
     public function getName(): ?string
@@ -108,5 +119,16 @@ class Video
         $this->tags = $tags;
 
         return $this;
+    }
+
+    public function setState($state): self
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+    public function getState(): int
+    {
+        return $this->state;
     }
 }

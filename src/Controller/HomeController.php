@@ -4,22 +4,25 @@
 namespace App\Controller;
 
 
-use App\Repository\UserRepository;
-use App\Repository\VideoRepository;
+use App\Entity\Video;
+use App\Form\VideoType;
+use App\Service\UserService;
+use App\Service\VideoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
+    private $userService;
+    private $videoService;
 
-    private $userRepository;
-    private $videoRepository;
-
-    public function __construct(UserRepository $userRepository, VideoRepository $videoRepository)
+    public function __construct(UserService $userService, VideoService $videoService)
     {
-        $this->userRepository = $userRepository;
-        $this->videoRepository = $videoRepository;
+        $this->userService = $userService;
+        $this->videoService = $videoService;
     }
 
     /**
@@ -32,11 +35,36 @@ class HomeController extends AbstractController
             return $this->redirectToRoute("app_login");
         }
 
-        $user = $this->userRepository->findOneByName($this->getUser()->getUsername());
-        $videos = $this->videoRepository->findByUploader($user);
+        $user = $this->userService->getLoggedInUser();
+        $videos = $this->videoService->getVideos($user);
 
-        dump($videos);
+        return $this->render("home/dashboard.html.twig", [
+            "videos" => $videos
+        ]);
+    }
 
-        return $this->render("home/dashboard.html.twig");
+    /**
+     * @Route("/upload", name="app_upload")
+     */
+    public function upload(Request $request): Response
+    {
+        $video = new Video();
+        $form = $this->createForm(VideoType::class, $video);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $video = $form->getData();
+
+            $file = $form->get("file")->getData();
+            if (!$file) {
+                $form->addError(new FormError(""));
+            } else {
+                $this->videoService->addVideo($video, $file);
+            }
+        }
+
+        return $this->render("home/upload.html.twig", [
+            "form" => $form->createView()
+        ]);
     }
 }

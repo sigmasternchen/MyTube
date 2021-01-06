@@ -4,6 +4,10 @@
 
 {% block body %}
 
-    Hi
+    {% for video in videos %}
+        <div>
+            {{ video.name }}
+        </div>
+    {% endfor %}
 
 {% endblock %}

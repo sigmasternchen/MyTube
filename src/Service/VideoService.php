@@ -46,4 +46,9 @@ class VideoService
         $video->setState($state);
         $this->videoRepository->update();
     }
+
+    public function get($videoId): ?Video
+    {
+        return $this->videoRepository->findOneById($videoId);
+    }
 }

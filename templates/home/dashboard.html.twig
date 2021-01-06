@@ -7,6 +7,7 @@
     {% for video in videos %}
         <div>
             {{ video.name }}
+            (<a href="{{ path("app_watch_page", {linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"), videoId: video.customId}) }}">Link</a>)
         </div>
     {% endfor %}
 

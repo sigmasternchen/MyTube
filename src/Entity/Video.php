@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\VideoRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -17,6 +19,7 @@ class Video
     public const PROCESSING_THUMBNAIL = 2;
     public const PROCESSING_TRANSCODE = 3;
     public const DONE = 4;
+    public const FAIL = -1;
 
     /**
      * @ORM\Id
@@ -25,6 +28,7 @@ class Video
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private $id;
+    private $customId;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="videos")
@@ -56,6 +60,16 @@ class Video
      * @ORM\Column(type="integer")
      */
     private $state = self::WAITING;
+
+    /**
+     * @ORM\OneToMany(targetEntity=VideoLink::class, mappedBy="video")
+     */
+    private $videoLinks;
+
+    public function __construct()
+    {
+        $this->videoLinks = new ArrayCollection();
+    }
 
     public function getId(): ?UuidInterface
     {
@@ -130,5 +144,64 @@ class Video
     public function getState(): int
     {
         return $this->state;
+    }
+
+    public function getStateString(): string
+    {
+        switch ($this->state) {
+            case self::WAITING:
+                return "waiting";
+            case self::PROCESSING_THUMBNAIL:
+                return "thumbnail";
+            case self::PROCESSING_TRANSCODE:
+                return "transcoding";
+            case self::DONE:
+                return "done";
+            case self::FAIL:
+                return "fail";
+            default:
+                return "unknown";
+        }
+    }
+
+    /**
+     * @return Collection|VideoLink[]
+     */
+    public function getVideoLinks(): Collection
+    {
+        return $this->videoLinks;
+    }
+
+    public function addVideoLink(VideoLink $videoLink): self
+    {
+        if (!$this->videoLinks->contains($videoLink)) {
+            $this->videoLinks[] = $videoLink;
+            $videoLink->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoLink(VideoLink $videoLink): self
+    {
+        if ($this->videoLinks->removeElement($videoLink)) {
+            // set the owning side to null (unless already changed)
+            if ($videoLink->getVideo() === $this) {
+                $videoLink->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCustomId(): string
+    {
+        return $this->customId;
+    }
+
+    public function setCustomId($customId): self
+    {
+        $this->customId = $customId;
+        return $this;
     }
 }

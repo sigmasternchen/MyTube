@@ -27,6 +27,11 @@
                             {% endif %}
                         </div>
                         <div class="info">
+                            <div class="link">
+                                <a href="{{ path("app_new_link") }}?video={{ video.customId }}">
+                                    <i class="fas fa-link"></i>
+                                </a>
+                            </div>
                             <h5>{{ video.name }}</h5>
                             <p>
                                 {{ video.description }}

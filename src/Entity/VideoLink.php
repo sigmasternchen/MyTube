@@ -83,9 +83,9 @@ class VideoLink
         return $this->created;
     }
 
-    public function setCreated(DateTimeImmutable $created): self
+    public function setCreated(): self
     {
-        $this->created = $created;
+        $this->created = new DateTimeImmutable();
 
         return $this;
     }
@@ -102,7 +102,7 @@ class VideoLink
         return $this;
     }
 
-    public function getViewableUntil(): DateTime
+    public function getViewableUntil(): ?DateTime
     {
         return $this->viewableUntil;
     }
@@ -113,7 +113,7 @@ class VideoLink
         return $this;
     }
 
-    public function getViewableFor(): int
+    public function getViewableFor(): ?int
     {
         return $this->viewableFor;
     }

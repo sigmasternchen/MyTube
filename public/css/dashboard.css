@@ -54,7 +54,7 @@
 }
 
 .info {
-    padding: 1vw;
+    padding: 2% 4% 4%;
 }
 
 .disable {
@@ -81,4 +81,18 @@
     width: 100%;
     top: 55%;
     color: lightgray;
+}
+
+.link {
+    position: absolute;
+    top: calc(9 / 16 * 100% + 12%);
+    right: 3%;
+}
+
+.link a {
+    color: #9f44b4;
+}
+
+.link:hover a {
+    color: grey;
 }

@@ -5,11 +5,14 @@ namespace App\Controller;
 
 
 use App\Entity\Video;
+use App\Entity\VideoLink;
 use App\Form\VideoLinkType;
+use App\Form\VideoType;
 use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
 use App\Service\VideoLinkService;
 use App\Service\VideoService;
+use Doctrine\DBAL\Types\ConversionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +73,7 @@ class DashboardController extends AbstractController
         }
 
         $video = new Video();
-        $form = $this->createForm(VideoLinkType::class, $video);
+        $form = $this->createForm(VideoType::class, $video);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -81,6 +84,8 @@ class DashboardController extends AbstractController
                 $form->addError(new FormError(""));
             } else {
                 $this->videoService->addVideo($video, $file);
+
+                return $this->redirectToRoute("app_dashboard");
             }
         }
 
@@ -92,7 +97,7 @@ class DashboardController extends AbstractController
     /**
      * @Route("/links", name="app_links")
      */
-    public function links(): Response
+    public function showLinks(): Response
     {
         if (!$this->isGranted("ROLE_USER")) {
             // not logged in
@@ -104,6 +109,58 @@ class DashboardController extends AbstractController
 
         return $this->render("dashboard/links.html.twig", [
             "links" => $links
+        ]);
+    }
+
+    /**
+     * @Route("/links/new", name="app_new_link")
+     */
+    public function newLink(Request $request): Response
+    {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $videoId = $request->query->get("video");
+        if (!$videoId) {
+            return $this->redirectToRoute("app_links");
+        }
+
+        try {
+            $videoId = $this->uuidMapper->fromString($videoId);
+        } catch (ConversionException $e) {
+            return $this->redirectToRoute("app_links");
+        }
+
+        $video = $this->videoService->get($videoId);
+        if (!$video) {
+            return $this->redirectToRoute("app_dashboard");
+        }
+
+        $videoLink = new VideoLink();
+        $videoLink->setVideo($video);
+        $form = $this->createForm(VideoLinkType::class, $videoLink);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $videoLink = $form->getData();
+
+            $user = $this->userService->getLoggedInUser();
+            $videoLink->setCreator($user);
+
+            $videoLink->setCreated();
+
+            $this->videoLinkService->add($videoLink);
+
+            return $this->redirectToRoute("app_links");
+        }
+
+        $video->setCustomId($this->uuidMapper->toString($video->getId()));
+
+        return $this->render("dashboard/newlink.html.twig", [
+            "video" => $video,
+            "form" => $form->createView()
         ]);
     }
 }

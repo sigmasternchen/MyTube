@@ -47,4 +47,15 @@ class VideoLinkRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function save(VideoLink $videoLink)
+    {
+        $this->_em->persist($videoLink);
+        $this->_em->flush();
+    }
+
+    public function update()
+    {
+        $this->_em->flush();
+    }
 }

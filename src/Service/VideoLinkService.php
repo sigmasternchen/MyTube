@@ -26,4 +26,9 @@ class VideoLinkService
     {
         return $this->videoLinkRepository->findByCreator($user);
     }
+
+    public function add($videoLink): void
+    {
+        $this->videoLinkRepository->save($videoLink);
+    }
 }

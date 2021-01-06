@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Links{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/links.css") }}">
+{% endblock %}
+
+{% block body %}
+    <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+        linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+        videoId: video.customId
+    }) }}"/>
+    {{ video.name }}
+
+    {{ form(form) }}
+{% endblock %}

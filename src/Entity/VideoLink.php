@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VideoLinkRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
@@ -33,9 +34,21 @@ class VideoLink
     private $created;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $mode = 0;
+    private $maxViews;
+
+    /**
+     * hours
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $viewableFor;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $viewableUntil;
 
     public function getId(): ?UuidInterface
     {
@@ -66,15 +79,37 @@ class VideoLink
         return $this;
     }
 
-    public function getMode(): ?int
+    public function getMaxViews(): ?int
     {
-        return $this->mode;
+        return $this->maxViews;
     }
 
-    public function setMode(int $mode): self
+    public function setMaxViews(int $maxViews): self
     {
-        $this->mode = $mode;
+        $this->maxViews = $maxViews;
 
+        return $this;
+    }
+
+    public function getViewableUntil(): DateTime
+    {
+        return $this->viewableUntil;
+    }
+
+    public function setViewableUntil($viewableUntil): self
+    {
+        $this->viewableUntil = $viewableUntil;
+        return $this;
+    }
+
+    public function getViewableFor(): int
+    {
+        return $this->viewableFor;
+    }
+
+    public function setViewableFor($viewableFor): self
+    {
+        $this->viewableFor = $viewableFor;
         return $this;
     }
 }

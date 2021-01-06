@@ -16,3 +16,6 @@
 ###< symfony/phpunit-bridge ###
 
 /.idea/**
+
+/landingzone/**
+/content/**

@@ -5,9 +5,10 @@ namespace App\Controller;
 
 
 use App\Entity\Video;
-use App\Form\VideoType;
+use App\Form\VideoLinkType;
 use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
+use App\Service\VideoLinkService;
 use App\Service\VideoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -19,12 +20,20 @@ class DashboardController extends AbstractController
 {
     private $userService;
     private $videoService;
+    private $videoLinkService;
+
     private $uuidMapper;
 
-    public function __construct(UserService $userService, VideoService $videoService, CustomUuidMapper $uuidMapper)
+    public function __construct(
+        UserService $userService,
+        VideoService $videoService,
+        VideoLinkService $videoLinkService,
+        CustomUuidMapper $uuidMapper
+    )
     {
         $this->userService = $userService;
         $this->videoService = $videoService;
+        $this->videoLinkService = $videoLinkService;
         $this->uuidMapper = $uuidMapper;
     }
 
@@ -55,8 +64,13 @@ class DashboardController extends AbstractController
      */
     public function upload(Request $request): Response
     {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
         $video = new Video();
-        $form = $this->createForm(VideoType::class, $video);
+        $form = $this->createForm(VideoLinkType::class, $video);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,9 +94,16 @@ class DashboardController extends AbstractController
      */
     public function links(): Response
     {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $user = $this->userService->getLoggedInUser();
+        $links = $this->videoLinkService->getAll($user);
 
         return $this->render("dashboard/links.html.twig", [
-            "links" => ["1", "2", "3"]
+            "links" => $links
         ]);
     }
 }

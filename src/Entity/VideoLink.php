@@ -50,6 +50,17 @@ class VideoLink
      */
     private $viewableUntil;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $creator;
+
+    /**
+     * @ORM\Column(type="string", length=1024, nullable=true)
+     */
+    private $comment;
+
     public function getId(): ?UuidInterface
     {
         return $this->id;
@@ -110,6 +121,30 @@ class VideoLink
     public function setViewableFor($viewableFor): self
     {
         $this->viewableFor = $viewableFor;
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
         return $this;
     }
 }

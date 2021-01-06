@@ -9,19 +9,22 @@
     <div class="grid-container">
         <div class="row">
             {% for video in videos %}
+                {% set disabled = video.state != constant("App\\Entity\\Video::DONE") %}
                 <div class="video-tile col-md-4">
                     <div class="tile-content bg-light shadow-5-strong">
                         <div class="thumbnail" onclick="location.href = '{{ path("app_watch_page", {
                             linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
                             videoId: video.customId
                         }) }}'">
-                            <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
-                                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
-                                videoId: video.customId
-                            }) }}"/>
-                            <div class="play-button">
-                                <i class="fas fa-play"></i>
-                            </div>
+                            {% if disabled == false %}
+                                <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                                    linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                    videoId: video.customId
+                                }) }}"/>
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="info">
                             <h5>{{ video.name }}</h5>
@@ -29,6 +32,16 @@
                                 {{ video.description }}
                             </p>
                         </div>
+                        {% if disabled %}
+                            <div class="disable">
+                                <div class="spinner spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div class="state">
+                                    {{ video.getStateString() }}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

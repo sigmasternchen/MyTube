@@ -8,6 +8,7 @@
 }
 
 .video-tile {
+    position: relative;
     padding: 3%;
 }
 
@@ -18,6 +19,35 @@
 }
 
 .tile-content {
+    position: absolute;
     width: 100%;
     height: 100%;
+}
+
+.thumbnail {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.thumbnail img {
+    width: 100%;
+}
+
+.play-button {
+    position: absolute;
+    left: calc(50% - 1.5vw);
+    top: calc(50% - 1.5vw);
+    font-size: 3vw;
+    /*color: var(--vjs-theme-fantasy--primary); */
+    color: #9f44b4;
+    transition: color 0.3s;
+}
+
+.thumbnail:hover .play-button {
+    color: white;
+}
+
+.info {
+    padding: 1vw;
 }

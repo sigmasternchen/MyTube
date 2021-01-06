@@ -11,8 +11,24 @@
             {% for video in videos %}
                 <div class="video-tile col-md-4">
                     <div class="tile-content bg-light shadow-5-strong">
-                        {{ video.name }}
-                        (<a href="{{ path("app_watch_page", {linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"), videoId: video.customId}) }}">Link</a>)
+                        <div class="thumbnail" onclick="location.href = '{{ path("app_watch_page", {
+                            linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                            videoId: video.customId
+                        }) }}'">
+                            <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                videoId: video.customId
+                            }) }}"/>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="info">
+                            <h5>{{ video.name }}</h5>
+                            <p>
+                                {{ video.description }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             {% endfor %}

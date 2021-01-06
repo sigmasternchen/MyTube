@@ -146,7 +146,8 @@ class WatchController extends AbstractController
             "global" => $this->generateUrl("app_watch_global", [
                 "linkId" => $linkId,
                 "videoId" => $videoId
-            ])
+            ]),
+            "video" => $data["video"],
         ]);
     }
 }

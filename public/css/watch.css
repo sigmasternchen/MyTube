@@ -1,0 +1,26 @@
+#player {
+    width: 73.5%;
+}
+
+#player .video-js {
+    width: 100%;
+}
+
+.pane-container {
+    position: relative;
+}
+
+#set {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 23.5%;
+    min-height: 100px;
+    padding: 1%;
+}
+
+#description {
+    margin-top: 3%;
+    width: 73.5%;
+    padding: 1%;
+}

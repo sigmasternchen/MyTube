@@ -29,7 +29,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/", name="app_home")
+     * @Route("/", name="app_dashboard")
      */
     public function home(): Response
     {

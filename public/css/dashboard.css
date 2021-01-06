@@ -1,0 +1,23 @@
+.grid-container {
+    width: 106%;
+    margin-left: -3%;
+}
+
+.grid-container .row {
+    margin: 0;
+}
+
+.video-tile {
+    padding: 3%;
+}
+
+.video-tile:after {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.tile-content {
+    width: 100%;
+    height: 100%;
+}

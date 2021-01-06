@@ -1,14 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Home{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/dashboard.css") }}">
+{% endblock %}
 
 {% block body %}
-
-    {% for video in videos %}
-        <div>
-            {{ video.name }}
-            (<a href="{{ path("app_watch_page", {linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"), videoId: video.customId}) }}">Link</a>)
+    <div class="grid-container">
+        <div class="row">
+            {% for video in videos %}
+                <div class="video-tile col-md-4">
+                    <div class="tile-content bg-light shadow-5-strong">
+                        {{ video.name }}
+                        (<a href="{{ path("app_watch_page", {linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"), videoId: video.customId}) }}">Link</a>)
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-
+    </div>
 {% endblock %}

@@ -4,6 +4,10 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset("css/video-js.css") }}">
+
+    <link href="{{ assert("css/video-js-fantasy.css") }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset("css/watch.css") }}"
 {% endblock %}
 
 {% block javascripts %}
@@ -11,22 +15,32 @@
 {% endblock %}
 
 {% block body %}
-    <video
-            id="my-video"
-            class="video-js"
-            controls
-            preload="auto"
-            width="640"
-            height="264"
-            poster="{{ thumbnail }}"
-            data-setup="{}"
-    >
-        <!--<source src="{{ global }}#.m3u8" type="application/vnd.apple.mpegur" />-->
-        <source src="{{ global }}#.m3u8" type="application/x-mpegURL"/>
-        <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to a
-            web browser that
-            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-        </p>
-    </video>
+    <div class="pane-container">
+        <div id="player" class="shadow-5-strong">
+            <video
+                    class="video-js vjs-theme-fantasy"
+                    controls
+                    preload="auto"
+                    poster="{{ thumbnail }}"
+                    data-setup="{}"
+            >
+                <!--<source src="{{ global }}#.m3u8" type="application/vnd.apple.mpegur" />-->
+                <source src="{{ global }}#.m3u8" type="application/x-mpegURL"/>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a
+                    web browser that
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+            </video>
+        </div>
+        <div id="description" class="bg-light shadow-5-strong">
+            <h2>{{ video.name }}</h2>
+            <p>
+                {{ video.description }}
+            </p>
+        </div>
+        <div id="set" class="bg-light shadow-5-strong">
+            <h2>Set</h2>
+        </div>
+    </div>
 {% endblock %}

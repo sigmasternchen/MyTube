@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset("css/video-js.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/videojs-hls-quality-selector.css") }}">
     <link href="{{ asset("css/video-js-fantasy.css") }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset("css/watch.css") }}"
@@ -11,12 +12,19 @@
 
 {% block javascripts %}
     <script src="{{ asset("js/video.min.js") }}"></script>
+    <script src="{{ asset("js/videojs-contrib-quality-levels.min.js") }}"></script>
+    <script src="{{ asset("js/videojs-hls-quality-selector.min.js") }}"></script>
+    <script>
+        // enable quality selector
+        videojs('video').hlsQualitySelector();
+    </script>
 {% endblock %}
 
 {% block body %}
     <div class="pane-container">
         <div id="player" class="shadow-5-strong">
             <video
+                    id="video"
                     class="video-js vjs-theme-fantasy"
                     controls
                     preload="auto"

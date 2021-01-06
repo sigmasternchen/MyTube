@@ -42,16 +42,28 @@ class TranscodeCommand extends Command
 
     private function handleVideo(Video $video, OutputInterface $output)
     {
-        $this->videoService->setVideoState($video, Video::PROCESSING_TRANSCODE);
+        $output->writeln("starting creation of thumbnail...");
+        $this->videoService->setVideoState($video, Video::PROCESSING_THUMBNAIL);
+        if ($this->callScript("thumbnail.sh", [$video->getId()->toString()])) {
+            $output->writeln("thumbnail creation successful");
+        } else {
+            $output->writeln("thumbnail creation failed");
+            $this->videoService->setVideoState($video, Video::FAIL);
+            return;
+        }
+
 
         $output->writeln("starting transcoding...");
+        $this->videoService->setVideoState($video, Video::PROCESSING_TRANSCODE);
         if ($this->callScript("transcode.sh", [$video->getId()->toString()])) {
             $output->writeln("transcoding successful");
-            $this->videoService->setVideoState($video, Video::DONE);
         } else {
             $output->writeln("transcoding failed");
             $this->videoService->setVideoState($video, Video::FAIL);
+            return;
         }
+
+        $this->videoService->setVideoState($video, Video::DONE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

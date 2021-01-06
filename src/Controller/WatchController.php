@@ -26,6 +26,7 @@ class WatchController extends AbstractController
 
     private const PLAYLIST_MIME_TYPE = "application/x-mpegURL";
     private const TS_FILE_MIME_TYPE = "video/MP2T";
+    private const THUMBNAIL_MIME_TYPE = "image/png";
 
     private const TS_FILE_FORMAT = "seg-%06d-ts";
 
@@ -122,7 +123,7 @@ class WatchController extends AbstractController
     /**
      * @Route("/{linkId}/{videoId}/{quality}/seg-{tsFileId}-ts", name="app_watch_segment", requirements={"quality"="360|480|720|1080", "tsFileId"="\d+"})
      */
-    public function tsFiles($videoId, $linkId, int $quality, int $tsFileId): Response
+    public function tsFile($videoId, $linkId, int $quality, int $tsFileId): Response
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
@@ -135,6 +136,21 @@ class WatchController extends AbstractController
     }
 
     /**
+     * @Route("/{linkId}/{videoId}/thumb", name="app_watch_thumbnail")
+     */
+    public function thumbnail($videoId, $linkId): Response
+    {
+        $data = $this->checkRequestData($videoId, $linkId);
+
+        $file = self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "thumb.png";
+
+        $response = new BinaryFileResponse($file);
+        $response->headers->set("Content-Type", self::THUMBNAIL_MIME_TYPE);
+
+        return $response;
+    }
+
+    /**
      * @Route("/{linkId}/{videoId}/", name="app_watch_page")
      */
     public function watchPage($videoId, $linkId): Response
@@ -142,7 +158,10 @@ class WatchController extends AbstractController
         $data = $this->checkRequestData($videoId, $linkId);
 
         return $this->render("watch/watch.html.twig", [
-            "thumbnail" => "thumbnail.jpg",
+            "thumbnail" => $this->generateUrl("app_watch_thumbnail", [
+                "linkId" => $linkId,
+                "videoId" => $videoId
+            ]),
             "global" => $this->generateUrl("app_watch_global", [
                 "linkId" => $linkId,
                 "videoId" => $videoId

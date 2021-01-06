@@ -1,7 +1,7 @@
 #!/bin/sh
 
 dir="content/$1/"
-mkdir "$dir"
+mkdir -p "$dir"
 mkdir "$dir/360p/"
 mkdir "$dir/480p/"
 mkdir "$dir/720p/"

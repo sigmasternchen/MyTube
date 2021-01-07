@@ -73,9 +73,9 @@ class Video
     private $length;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
-    private $transcodingProgress;
+    private $transcodingProgress = 0;
 
     public function __construct()
     {

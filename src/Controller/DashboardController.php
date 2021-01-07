@@ -15,8 +15,11 @@ use App\Service\VideoService;
 use Doctrine\DBAL\Types\ConversionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
@@ -91,6 +94,36 @@ class DashboardController extends AbstractController
 
         return $this->render("dashboard/upload.html.twig", [
             "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/upload/{videoId}", name="app_upload_status")
+     */
+    public function uploadStatus($videoId): Response
+    {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        try {
+            $videoId = $this->uuidMapper->fromString($videoId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $video = $this->videoService->get($videoId);
+
+        if ($video == null || $video->getUploader() != $this->userService->getLoggedInUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        return new JsonResponse([
+            "id" => $this->uuidMapper->toString($video->getId()),
+            "state" => $video->getStateString(),
+            "stateId" => $video->getState(),
+            "progress" => $video->getTranscodingProgress()
         ]);
     }
 

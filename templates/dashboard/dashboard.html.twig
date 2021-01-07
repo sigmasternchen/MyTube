@@ -5,26 +5,63 @@
     <link rel="stylesheet" href="{{ asset("css/dashboard.css") }}">
 {% endblock %}
 
+{% block javascripts %}
+    <script>
+        (function () {
+            let intervalIds = [];
+            for (let id in autoupdate) {
+                intervalIds[id] = setInterval(function () {
+                    ajaxGet(autoupdate[id], function (data) {
+                        data = JSON.parse(data);
+
+                        let element = document.getElementById("video-" + id);
+                        if (data.stateId === {{ constant("App\\Entity\\Video::DONE") }}) {
+                            element.getElementsByClassName("disable")[0].remove();
+                            clearInterval(intervalIds[id]);
+                        } else {
+
+                            if (data.stateId > {{ constant("App\\Entity\\Video::PROCESSING_THUMBNAIL") }}) {
+                                let image = element.getElementsByClassName("thumbnail")[0].getElementsByTagName("img")[0];
+                                if (image.hasAttribute("data-src")) {
+                                    image.src = image.getAttribute("data-src");
+                                }
+                            }
+
+                            element.getElementsByClassName("state")[0].innerText = data.state;
+
+                            let progress = element.getElementsByClassName("transcodingProgress")[0];
+                            progress.getElementsByClassName("value")[0].innerText = data.progress + " %";
+                            progress.getElementsByClassName("bar")[0].style.width = data.progress + "%";
+
+                        }
+                    });
+                }, 2000);
+            }
+        })();
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="grid-container">
+        <script>var autoupdate = [];</script>
         <div class="row">
             {% for video in videos %}
                 {% set disabled = video.state != constant("App\\Entity\\Video::DONE") %}
-                <div class="video-tile col-md-4">
+                <div class="video-tile col-md-4" id="video-{{ video.customId }}">
                     <div class="tile-content bg-light shadow-5-strong">
                         <div class="thumbnail" onclick="location.href = '{{ path("app_watch_page", {
                             linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
                             videoId: video.customId
                         }) }}'">
-                            {% if disabled == false %}
-                                <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
-                                    linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
-                                    videoId: video.customId
-                                }) }}"/>
-                                <div class="play-button">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            {% endif %}
+                            <img alt="Thumbnail"
+                            {{ video.state > constant("App\\Entity\\Video::PROCESSING_THUMBNAIL") ? "src" : "data-src" }}
+                            ="{{ path("app_watch_thumbnail", {
+                                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                videoId: video.customId
+                            }) }}"/>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
                         </div>
                         <div class="info">
                             <div class="link">
@@ -38,12 +75,21 @@
                             </p>
                         </div>
                         {% if disabled %}
+                            <script>
+                                autoupdate["{{ video.customId }}"] = "{{ path("app_upload_status", {
+                                    videoId: video.customId
+                                }) }}";
+                            </script>
                             <div class="disable">
                                 <div class="spinner spinner-border" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                                 <div class="state">
                                     {{ video.getStateString() }}
+                                </div>
+                                <div class="transcodingProgress">
+                                    <div class="value">{{ video.transcodingProgress }} %</div>
+                                    <div class="bar" style="width: {{ video.transcodingProgress }}%;"></div>
                                 </div>
                             </div>
                         {% endif %}

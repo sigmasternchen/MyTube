@@ -84,8 +84,9 @@ class TranscodingService
     private function createThumbnail($id)
     {
         $video = $this->ffmpeg->open($this->rawPath($id));
-        $video->filters()->custom("thumbnail,scale=640:360");
-        $video->frame(TimeCode::fromSeconds(1))->save($this->contentDir($id) . "thumb.png");
+        $frame = $video->frame(TimeCode::fromSeconds(1));
+        $frame->filters()->custom("thumbnail,scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:-1:-1:color=black");
+        $frame->save($this->contentDir($id) . "thumb.png");
     }
 
     private function transcode(Video $video)

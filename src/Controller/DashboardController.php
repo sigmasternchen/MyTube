@@ -169,6 +169,7 @@ class DashboardController extends AbstractController
         try {
             $videoId = $this->uuidMapper->fromString($videoId);
         } catch (ConversionException $e) {
+            return new Response($videoId);
             return $this->redirectToRoute("app_links");
         }
 

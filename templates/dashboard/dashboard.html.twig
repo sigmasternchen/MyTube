@@ -65,7 +65,7 @@
                         </div>
                         <div class="info">
                             <div class="link">
-                                <a href="{{ path("app_new_link") }}?video={{ video.customId }}">
+                                <a href="{{ path("app_new_link") }}?video={{ video.customId | url_encode }}">
                                     <i class="fas fa-link"></i>
                                 </a>
                             </div>

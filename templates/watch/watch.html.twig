@@ -18,6 +18,31 @@
         // enable quality selector
         videojs('video').hlsQualitySelector();
     </script>
+    <script>
+        {% if viewToken %}
+        (function () {
+            let player = videojs('video');
+            //let target = {{ video.length > 120 ? 60 : video.length * 0.5 }};
+            let target = 10;
+            let current = 0;
+            setInterval(function () {
+                console.log(!player.paused() + ", " + current + ", " + target);
+                if (!player.paused()) {
+                    current++;
+
+                    if (current === target) {
+                        ajaxPost("{{ path("app_watch_view", {
+                            linkId: linkId,
+                            videoId: video.customId,
+                            viewId: viewToken
+                        }) }}", null, function () {
+                        });
+                    }
+                }
+            }, 1000);
+        })()
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block body %}

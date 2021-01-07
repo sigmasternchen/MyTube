@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Video;
+use App\Entity\VideoLink;
 use App\Mapper\CustomUuidMapper;
+use App\Service\LoggingService;
 use App\Service\UserService;
 use App\Service\VideoLinkService;
 use App\Service\VideoService;
@@ -13,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WatchController extends AbstractController
@@ -34,28 +37,26 @@ class WatchController extends AbstractController
     private $userService;
     private $videoService;
     private $videoLinkService;
+    private $loggingService;
     private $uuidMapper;
 
     public function __construct(
         UserService $userService,
         VideoService $videoService,
         VideoLinkService $videoLinkService,
+        LoggingService $loggingService,
         CustomUuidMapper $uuidMapper
     )
     {
         $this->userService = $userService;
         $this->videoService = $videoService;
         $this->videoLinkService = $videoLinkService;
+        $this->loggingService = $loggingService;
         $this->uuidMapper = $uuidMapper;
     }
 
-    private function isAllowed(?Video $video, ?User $user, $linkId): int
+    private function isAllowed(?Video $video, ?User $user, VideoLink $link): int
     {
-        if ($video->getUploader() == $user) {
-            return self::IS_OWNER;
-        }
-
-        $link = $this->videoLinkService->get($this->uuidMapper->fromString($linkId));
         if (!$link) {
             return self::NOT_ALLOWED;
         }
@@ -74,8 +75,18 @@ class WatchController extends AbstractController
         try {
             $video = $this->videoService->get($this->uuidMapper->fromString($videoId));
             $user = $this->userService->getLoggedInUser();
+            $link = null;
 
-            $allowed = $this->isAllowed($video, $user, $linkId);
+            $allowed = self::NOT_ALLOWED;
+
+            if ($video->getUploader() == $user) {
+                $allowed = self::IS_OWNER;
+            }
+
+            if (!$allowed) {
+                $link = $this->videoLinkService->get($this->uuidMapper->fromString($linkId));
+                $allowed = $this->isAllowed($video, $user, $link);
+            }
         } catch (ConversionException $e) {
             throw new AccessDeniedHttpException();
         }
@@ -86,6 +97,7 @@ class WatchController extends AbstractController
 
         return [
             "video" => $video,
+            "link" => $link,
             "user" => $user,
             "isOwner" => $allowed == self::IS_OWNER
         ];
@@ -152,13 +164,45 @@ class WatchController extends AbstractController
     }
 
     /**
+     * @Route("/{linkId}/{videoId}/v/{viewId}", methods={"POST"}, name="app_watch_view")
+     */
+    public function viewCounter($videoId, $linkId, $viewId): Response
+    {
+        $data = $this->checkRequestData($videoId, $linkId);
+
+        if ($data["isOwner"]) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $viewId = $this->uuidMapper->fromString($viewId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        if (!$this->loggingService->validateView($data["video"], $data["link"], $viewId)) {
+            throw new BadRequestHttpException();
+        }
+
+        return new Response("ok");
+    }
+
+    /**
      * @Route("/{linkId}/{videoId}/", name="app_watch_page")
      */
     public function watchPage($videoId, $linkId): Response
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
+        $viewToken = null;
+        if (!$data["isOwner"]) {
+            $viewToken = $this->uuidMapper->toString($this->loggingService->createView($data["video"], $data["link"]));
+        }
+
+        $data["video"]->setCustomId($videoId);
+
         return $this->render("watch/watch.html.twig", [
+            "viewToken" => $viewToken,
             "thumbnail" => $this->generateUrl("app_watch_thumbnail", [
                 "linkId" => $linkId,
                 "videoId" => $videoId
@@ -167,6 +211,7 @@ class WatchController extends AbstractController
                 "linkId" => $linkId,
                 "videoId" => $videoId
             ]),
+            "linkId" => $linkId,
             "video" => $data["video"],
         ]);
     }

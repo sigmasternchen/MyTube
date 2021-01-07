@@ -45,6 +45,10 @@
     <div class="grid-container">
         <script>var autoupdate = [];</script>
         <div class="row">
+            {% if videos | length == 0 %}
+                <div class="no-content">No videos yet. Click <a href="{{ path("app_upload") }}">here</a> to add some.
+                </div>
+            {% endif %}
             {% for video in videos %}
                 {% set disabled = video.state != constant("App\\Entity\\Video::DONE") %}
                 <div class="video-tile col-md-4" id="video-{{ video.customId }}">

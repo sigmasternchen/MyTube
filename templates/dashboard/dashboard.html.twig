@@ -70,6 +70,9 @@
                                 </a>
                             </div>
                             <h5>{{ video.name }}</h5>
+                            <div class="views">
+                                {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
+                            </div>
                             <p>
                                 {{ video.description }}
                             </p>

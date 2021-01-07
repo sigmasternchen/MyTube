@@ -9,6 +9,7 @@ use App\Entity\VideoLink;
 use App\Form\VideoLinkType;
 use App\Form\VideoType;
 use App\Mapper\CustomUuidMapper;
+use App\Service\LoggingService;
 use App\Service\UserService;
 use App\Service\VideoLinkService;
 use App\Service\VideoService;
@@ -27,6 +28,7 @@ class DashboardController extends AbstractController
     private $userService;
     private $videoService;
     private $videoLinkService;
+    private $loggingService;
 
     private $uuidMapper;
 
@@ -34,12 +36,14 @@ class DashboardController extends AbstractController
         UserService $userService,
         VideoService $videoService,
         VideoLinkService $videoLinkService,
+        LoggingService $loggingService,
         CustomUuidMapper $uuidMapper
     )
     {
         $this->userService = $userService;
         $this->videoService = $videoService;
         $this->videoLinkService = $videoLinkService;
+        $this->loggingService = $loggingService;
         $this->uuidMapper = $uuidMapper;
     }
 
@@ -58,6 +62,7 @@ class DashboardController extends AbstractController
 
         foreach ($videos as $video) {
             $video->setCustomId($this->uuidMapper->toString($video->getId()));
+            $video->setViews($this->loggingService->getViews($video));
         }
 
         return $this->render("dashboard/dashboard.html.twig", [
@@ -169,7 +174,6 @@ class DashboardController extends AbstractController
         try {
             $videoId = $this->uuidMapper->fromString($videoId);
         } catch (ConversionException $e) {
-            return new Response($videoId);
             return $this->redirectToRoute("app_links");
         }
 

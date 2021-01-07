@@ -118,3 +118,10 @@
     height: 2%;
     background-color: lightgrey;
 }
+
+.views {
+    position: absolute;
+    font-size: 1vw;
+    top: 69%;
+    right: 10%;
+}

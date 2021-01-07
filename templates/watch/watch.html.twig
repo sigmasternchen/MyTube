@@ -67,6 +67,9 @@
         </div>
         <div id="description" class="bg-light shadow-5-strong">
             <h2>{{ video.name }}</h2>
+            <div class="views">
+                {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
+            </div>
             <p>
                 {{ video.description }}
             </p>

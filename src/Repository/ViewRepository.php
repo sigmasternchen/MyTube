@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Video;
 use App\Entity\View;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -57,5 +58,15 @@ class ViewRepository extends ServiceEntityRepository
     public function update()
     {
         $this->_em->flush();
+    }
+
+    public function countForVideo(Video $video): int
+    {
+        $qb = $this->createQueryBuilder("v");
+        return $qb->select("count(v.id)")
+            ->andWhere("v.video = :video")
+            ->setParameter("video", $video->getId()->getBytes())
+            ->andWhere($qb->expr()->isNotNull("v.validated"))
+            ->getQuery()->getSingleScalarResult();
     }
 }

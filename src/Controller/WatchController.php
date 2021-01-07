@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Video;
 use App\Entity\VideoLink;
 use App\Mapper\CustomUuidMapper;
@@ -55,7 +54,7 @@ class WatchController extends AbstractController
         $this->uuidMapper = $uuidMapper;
     }
 
-    private function isAllowed(?Video $video, ?User $user, VideoLink $link): int
+    private function isAllowed(?Video $video, VideoLink $link): int
     {
         if (!$link) {
             return self::NOT_ALLOWED;
@@ -85,7 +84,7 @@ class WatchController extends AbstractController
 
             if (!$allowed) {
                 $link = $this->videoLinkService->get($this->uuidMapper->fromString($linkId));
-                $allowed = $this->isAllowed($video, $user, $link);
+                $allowed = $this->isAllowed($video, $link);
             }
         } catch (ConversionException $e) {
             throw new AccessDeniedHttpException();
@@ -200,6 +199,7 @@ class WatchController extends AbstractController
         }
 
         $data["video"]->setCustomId($videoId);
+        $data["video"]->setViews($this->loggingService->getViews($data["video"]));
 
         return $this->render("watch/watch.html.twig", [
             "viewToken" => $viewToken,

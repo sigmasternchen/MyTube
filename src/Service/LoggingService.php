@@ -54,4 +54,10 @@ class LoggingService
 
         return true;
     }
+
+    public function getViews(Video $video): int
+    {
+        //return $this->viewRepository->countByVideoAndNotNullValidated($video);
+        return $this->viewRepository->countForVideo($video);
+    }
 }

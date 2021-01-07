@@ -77,6 +77,8 @@ class Video
      */
     private $transcodingProgress = 0;
 
+    private $views = 0;
+
     public function __construct()
     {
         $this->videoLinks = new ArrayCollection();
@@ -239,6 +241,17 @@ class Video
     {
         $this->transcodingProgress = $transcodingProgress;
 
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): self
+    {
+        $this->views = $views;
         return $this;
     }
 }

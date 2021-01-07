@@ -156,4 +156,16 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getReadableRoles(): array
+    {
+        return array_map(function ($role) {
+            $i = strrpos($role, "_");
+            if ($i) {
+                // $i === false it's probably a custom name
+                return substr($role, $i + 1);
+            }
+            return $role;
+        }, $this->getRoles());
+    }
 }

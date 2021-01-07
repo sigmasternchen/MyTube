@@ -31,4 +31,9 @@ class UserService
 
         return $user;
     }
+
+    public function getUsers(): array
+    {
+        return $this->userRepository->findAll();
+    }
 }

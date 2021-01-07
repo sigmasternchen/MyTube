@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Links{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/admin.css") }}">
+{% endblock %}
+
+{% block body %}
+    <div class="links bg-light shadow-5">
+        <table class="table">
+            <tr>
+                <th>
+                    <input type="checkbox">
+                </th>
+                <th>
+                    Username
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Roles
+                </th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        {{ user.name }}
+                    </td>
+                    <td>
+                        [not yet implemented]
+                    </td>
+                    <td>
+                        {% for role in user.getReadableRoles() %}
+                            <div class="customChip">{{ role }}</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

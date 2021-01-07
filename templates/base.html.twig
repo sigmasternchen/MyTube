@@ -33,18 +33,29 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {% if route_name == "app_dashboard" %} active {% endif %}"
-                           aria-current="page" href="{{ path("app_dashboard") }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if route_name == "app_upload" %} active {% endif %}" aria-current="page"
-                           href="{{ path("app_upload") }}">Upload</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if route_name == "app_links" %} active {% endif %}" aria-current="page"
-                           href="{{ path("app_links") }}">Links</a>
-                    </li>
+                    {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if route_name == "app_dashboard" %} active {% endif %}"
+                               aria-current="page" href="{{ path("app_dashboard") }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if route_name == "app_upload" %} active {% endif %}"
+                               aria-current="page"
+                               href="{{ path("app_upload") }}">Upload</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if route_name == "app_links" %} active {% endif %}"
+                               aria-current="page"
+                               href="{{ path("app_links") }}">Links</a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if route_name == "app_user_list" %} active {% endif %}"
+                               aria-current="page"
+                               href="{{ path("app_user_list") }}">Users</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <form class="d-flex input-group w-auto">
                     <input

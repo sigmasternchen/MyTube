@@ -38,6 +38,7 @@ class VideoLink
      * @ORM\Column(type="integer", nullable=true)
      */
     private $maxViews;
+    private $viewsLeft;
 
     /**
      * hours
@@ -45,6 +46,7 @@ class VideoLink
      * @ORM\Column(type="integer", nullable=true)
      */
     private $viewableFor;
+    private $viewableForLeft;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -158,5 +160,51 @@ class VideoLink
     {
         $this->customId = $customId;
         return $this;
+    }
+
+    public function getViewableForLeft(): ?int
+    {
+        return $this->viewableForLeft;
+    }
+
+    public function setViewableForLeft($viewableForLeft): self
+    {
+        $this->viewableForLeft = $viewableForLeft;
+        return $this;
+    }
+
+    public function getViewsLeft(): ?int
+    {
+        return $this->viewsLeft;
+    }
+
+    public function setViewsLeft($viewsLeft): self
+    {
+        $this->viewsLeft = $viewsLeft;
+        return $this;
+    }
+
+    public function viewable(bool $strict = true): bool
+    {
+        if ($this->getMaxViews()) {
+            if ($strict && $this->getViewsLeft() <= 0) {
+                return false;
+            }
+            if (!$strict && $this->getViewsLeft() < 0) {
+                return false;
+            }
+        }
+        if ($this->getViewableFor()) {
+            if ($this->getViewableForLeft() && $this->getViewableForLeft() < 0) {
+                return false;
+            }
+        }
+        if ($this->getViewableUntil()) {
+            if ($this->getViewableUntil()->getTimestamp() < (new DateTime())->getTimestamp()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

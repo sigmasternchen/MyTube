@@ -62,7 +62,7 @@ class DashboardController extends AbstractController
 
         foreach ($videos as $video) {
             $video->setCustomId($this->uuidMapper->toString($video->getId()));
-            $video->setViews($this->loggingService->getViews($video));
+            $video->setViews($this->loggingService->getViewsVideo($video));
         }
 
         return $this->render("dashboard/dashboard.html.twig", [

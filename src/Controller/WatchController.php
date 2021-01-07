@@ -54,7 +54,7 @@ class WatchController extends AbstractController
         $this->uuidMapper = $uuidMapper;
     }
 
-    private function isAllowed(?Video $video, VideoLink $link): int
+    private function isAllowed(?Video $video, VideoLink $link, bool $strict): int
     {
         if (!$link) {
             return self::NOT_ALLOWED;
@@ -66,10 +66,14 @@ class WatchController extends AbstractController
 
         // TODO: check constraints
 
+        if (!$link->viewable($strict)) {
+            return self::NOT_ALLOWED;
+        }
+
         return self::ALLOWED;
     }
 
-    private function checkRequestData($videoId, $linkId): array
+    private function checkRequestData($videoId, $linkId, bool $strict = true): array
     {
         try {
             $video = $this->videoService->get($this->uuidMapper->fromString($videoId));
@@ -84,7 +88,7 @@ class WatchController extends AbstractController
 
             if (!$allowed) {
                 $link = $this->videoLinkService->get($this->uuidMapper->fromString($linkId));
-                $allowed = $this->isAllowed($video, $link);
+                $allowed = $this->isAllowed($video, $link, $strict);
             }
         } catch (ConversionException $e) {
             throw new AccessDeniedHttpException();
@@ -122,7 +126,7 @@ class WatchController extends AbstractController
      */
     public function qualityPlaylist($videoId, $linkId, int $quality): Response
     {
-        $data = $this->checkRequestData($videoId, $linkId);
+        $data = $this->checkRequestData($videoId, $linkId, false);
 
         $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . "playlist.m3u8";
 
@@ -137,7 +141,7 @@ class WatchController extends AbstractController
      */
     public function tsFile($videoId, $linkId, int $quality, int $tsFileId): Response
     {
-        $data = $this->checkRequestData($videoId, $linkId);
+        $data = $this->checkRequestData($videoId, $linkId, false);
 
         $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . sprintf(self::TS_FILE_FORMAT, $tsFileId);
 
@@ -199,7 +203,7 @@ class WatchController extends AbstractController
         }
 
         $data["video"]->setCustomId($videoId);
-        $data["video"]->setViews($this->loggingService->getViews($data["video"]));
+        $data["video"]->setViews($this->loggingService->getViewsVideo($data["video"]));
 
         return $this->render("watch/watch.html.twig", [
             "viewToken" => $viewToken,

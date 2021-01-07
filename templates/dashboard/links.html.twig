@@ -12,6 +12,7 @@
                 <td>
                     <input type="checkbox">
                 </td>
+                <td></td>
                 <th>
                     Video
                 </th>
@@ -40,6 +41,11 @@
                         <input type="checkbox">
                     </td>
                     <td>
+                        {% if not link.viewable() %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% endif %}
+                    </td>
+                    <td>
                         <a href="{{ path("app_watch_page", {
                             linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
                             videoId: link.video.customId
@@ -59,21 +65,21 @@
                     </td>
                     <td>
                         {% if link.viewableUntil %}
-                            {{ viewableUntil | date("Y-m-d") }}
+                            {{ link.viewableUntil | date("Y-m-d") }}
                         {% else %}
                             -
                         {% endif %}
                     </td>
                     <td>
                         {% if link.maxViews %}
-                            # / {{ link.maxViews }}
+                            {{ link.viewsLeft }} / {{ link.maxViews }}
                         {% else %}
                             -
                         {% endif %}
                     </td>
                     <td>
                         {% if link.viewableFor %}
-                            # / {{ link.viewableFor }}
+                            {{ link.viewableForLeft != null ? link.viewableForLeft : "-" }} / {{ link.viewableFor }}
                         {% else %}
                             -
                         {% endif %}

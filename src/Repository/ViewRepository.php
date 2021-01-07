@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Video;
+use App\Entity\VideoLink;
 use App\Entity\View;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -63,10 +64,34 @@ class ViewRepository extends ServiceEntityRepository
     public function countForVideo(Video $video): int
     {
         $qb = $this->createQueryBuilder("v");
-        return $qb->select("count(v.id)")
-            ->andWhere("v.video = :video")
+        return $qb
+            ->select("count(v.id)")
+            ->where("v.video = :video")
             ->setParameter("video", $video->getId()->getBytes())
             ->andWhere($qb->expr()->isNotNull("v.validated"))
             ->getQuery()->getSingleScalarResult();
+    }
+
+    public function countForLink(VideoLink $videoLink): int
+    {
+        $qb = $this->createQueryBuilder("v");
+        return $qb
+            ->select("count(v.id)")
+            ->where("v.link = :link")
+            ->setParameter("link", $videoLink->getId()->getBytes())
+            ->andWhere($qb->expr()->isNotNull("v.validated"))
+            ->getQuery()->getSingleScalarResult();
+    }
+
+    public function getFirstViewOfLink(VideoLink $videoLink): ?View
+    {
+        $qb = $this->createQueryBuilder("v");
+        return $qb
+            ->where("v.link = :link")
+            ->setParameter("link", $videoLink->getId()->getBytes())
+            ->andWhere($qb->expr()->isNotNull("v.validated"))
+            ->orderBy("v.validated", "ASC")
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
     }
 }

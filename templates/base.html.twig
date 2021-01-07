@@ -57,21 +57,30 @@
                         </li>
                     {% endif %}
                 </ul>
-                <form class="d-flex input-group w-auto">
-                    <input
-                            type="search"
-                            class="form-control"
-                            placeholder="Type query"
-                            aria-label="Search"
-                    />
-                    <button
-                            class="btn btn-outline-primary"
-                            type="button"
-                            data-mdb-ripple-color="dark"
-                    >
-                        Search
-                    </button>
-                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a
+                                class="nav-link dropdown-toggle d-flex align-items-center"
+                                href="#"
+                                id="navbarDropdownMenuLink"
+                                role="button"
+                                data-mdb-toggle="dropdown"
+                                aria-expanded="false"
+                        >
+                            <img
+                                    src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
+                                    class="rounded-circle avatar"
+                                    alt=""
+                                    loading="lazy"
+                            />
+                        </a>
+                        <ul class="dropdown-menu avatar-dropdown" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">My profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ path("app_logout") }}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>

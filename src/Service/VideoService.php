@@ -11,7 +11,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VideoService
 {
-    private const LANDINGZONE_DIRECTORY = "../landingzone/";
+    public const LANDINGZONE_RELATIVE = "../";
+    public const LANDINGZONE_DIRECTORY = "landingzone/";
+    public const LANDINGZONE_EXTENTION = ".vid";
 
     private $videoRepository;
     private $userService;
@@ -33,17 +35,16 @@ class VideoService
         $video->setUploader($this->userService->getLoggedInUser());
         $this->videoRepository->save($video);
 
-        $file->move(self::LANDINGZONE_DIRECTORY, $video->getId()->toString() . ".vid");
+        $file->move(self::LANDINGZONE_RELATIVE . self::LANDINGZONE_DIRECTORY, $video->getId()->toString() . self::LANDINGZONE_EXTENTION);
     }
 
     public function getVideosForTranscode(): array
     {
-        return $this->videoRepository->findByState(Video::WAITING);
+        return $this->videoRepository->findByState(Video::QUEUED);
     }
 
-    public function setVideoState(Video $video, $state)
+    public function update(Video $video)
     {
-        $video->setState($state);
         $this->videoRepository->update();
     }
 

@@ -22,13 +22,14 @@ class WatchController extends AbstractController
     private const IS_OWNER = 2;
 
     public const OWNER_LINK_ID = "owner";
-    public const CONTENT_DIRECTORY = "../content/";
+    public const CONTENT_RELATIVE = "../";
+    public const CONTENT_DIRECTORY = "content/";
 
     private const PLAYLIST_MIME_TYPE = "application/x-mpegURL";
     private const TS_FILE_MIME_TYPE = "video/MP2T";
     private const THUMBNAIL_MIME_TYPE = "image/png";
 
-    private const TS_FILE_FORMAT = "seg-%06d-ts";
+    public const TS_FILE_FORMAT = "seg-%06d-ts";
 
     private $userService;
     private $videoService;
@@ -97,7 +98,7 @@ class WatchController extends AbstractController
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
-        $file = self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "playlist.m3u8";
+        $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "playlist.m3u8";
 
         $response = new BinaryFileResponse($file);
         $response->headers->set("Content-Type", self::PLAYLIST_MIME_TYPE);
@@ -112,7 +113,7 @@ class WatchController extends AbstractController
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
-        $file = self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . "playlist.m3u8";
+        $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . "playlist.m3u8";
 
         $response = new BinaryFileResponse($file);
         $response->headers->set("Content-Type", self::PLAYLIST_MIME_TYPE);
@@ -127,7 +128,7 @@ class WatchController extends AbstractController
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
-        $file = self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . sprintf(self::TS_FILE_FORMAT, $tsFileId);
+        $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . $quality . "p/" . sprintf(self::TS_FILE_FORMAT, $tsFileId);
 
         $response = new BinaryFileResponse($file);
         $response->headers->set("Content-Type", self::TS_FILE_MIME_TYPE);
@@ -142,7 +143,7 @@ class WatchController extends AbstractController
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
-        $file = self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "thumb.png";
+        $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "thumb.png";
 
         $response = new BinaryFileResponse($file);
         $response->headers->set("Content-Type", self::THUMBNAIL_MIME_TYPE);

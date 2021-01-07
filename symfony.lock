@@ -1,4 +1,7 @@
 {
+    "alchemy/binary-driver": {
+        "version": "v5.2.0"
+    },
     "amphp/amp": {
         "version": "v2.5.1"
     },
@@ -141,6 +144,9 @@
     "egulias/email-validator": {
         "version": "2.1.25"
     },
+    "evenement/evenement": {
+        "version": "v3.0.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.2"
     },
@@ -168,11 +174,17 @@
     "monolog/monolog": {
         "version": "2.2.0"
     },
+    "neutron/temporary-filesystem": {
+        "version": "3.0"
+    },
     "nikic/php-parser": {
         "version": "v4.10.4"
     },
     "php": {
         "version": "7.4"
+    },
+    "php-ffmpeg/php-ffmpeg": {
+        "version": "v0.17.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

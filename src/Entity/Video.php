@@ -15,10 +15,11 @@ use Ramsey\Uuid\UuidInterface;
  */
 class Video
 {
-    public const WAITING = 1;
-    public const PROCESSING_THUMBNAIL = 2;
-    public const PROCESSING_TRANSCODE = 3;
-    public const DONE = 4;
+    public const QUEUED = 1;
+    public const PROCESSING_META = 2;
+    public const PROCESSING_THUMBNAIL = 3;
+    public const PROCESSING_TRANSCODE = 4;
+    public const DONE = 5;
     public const FAIL = -1;
 
     /**
@@ -59,12 +60,22 @@ class Video
     /**
      * @ORM\Column(type="integer")
      */
-    private $state = self::WAITING;
+    private $state = self::QUEUED;
 
     /**
      * @ORM\OneToMany(targetEntity=VideoLink::class, mappedBy="video")
      */
     private $videoLinks;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $length;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $transcodingProgress;
 
     public function __construct()
     {
@@ -149,12 +160,14 @@ class Video
     public function getStateString(): string
     {
         switch ($this->state) {
-            case self::WAITING:
-                return "waiting";
+            case self::QUEUED:
+                return "queued";
+            case self::PROCESSING_META:
+                return "processing...";
             case self::PROCESSING_THUMBNAIL:
-                return "thumbnail";
+                return "creating thumbnail...";
             case self::PROCESSING_TRANSCODE:
-                return "transcoding";
+                return "transcoding...";
             case self::DONE:
                 return "done";
             case self::FAIL:
@@ -202,6 +215,30 @@ class Video
     public function setCustomId($customId): self
     {
         $this->customId = $customId;
+        return $this;
+    }
+
+    public function getLength(): ?float
+    {
+        return $this->length;
+    }
+
+    public function setLength(?float $length): self
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    public function getTranscodingProgress(): ?int
+    {
+        return $this->transcodingProgress;
+    }
+
+    public function setTranscodingProgress(?int $transcodingProgress): self
+    {
+        $this->transcodingProgress = $transcodingProgress;
+
         return $this;
     }
 }

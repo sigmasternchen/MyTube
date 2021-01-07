@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\Video;
+use App\Service\TranscodingService;
 use App\Service\VideoService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,12 +14,17 @@ class TranscodeCommand extends Command
     protected static $defaultName = "app:start-transcode";
 
     private $videoService;
+    private $transcodingService;
 
-    public function __construct(VideoService $videoService, string $name = null)
+    public function __construct(
+        VideoService $videoService,
+        TranscodingService $transcodingService,
+        string $name = null
+    )
     {
         parent::__construct($name);
         $this->videoService = $videoService;
-
+        $this->transcodingService = $transcodingService;
     }
 
     protected function configure()
@@ -40,32 +45,6 @@ class TranscodeCommand extends Command
         return $process->isSuccessful();
     }
 
-    private function handleVideo(Video $video, OutputInterface $output)
-    {
-        $output->writeln("starting creation of thumbnail...");
-        $this->videoService->setVideoState($video, Video::PROCESSING_THUMBNAIL);
-        if ($this->callScript("thumbnail.sh", [$video->getId()->toString()])) {
-            $output->writeln("thumbnail creation successful");
-        } else {
-            $output->writeln("thumbnail creation failed");
-            $this->videoService->setVideoState($video, Video::FAIL);
-            return;
-        }
-
-
-        $output->writeln("starting transcoding...");
-        $this->videoService->setVideoState($video, Video::PROCESSING_TRANSCODE);
-        if ($this->callScript("transcode.sh", [$video->getId()->toString()])) {
-            $output->writeln("transcoding successful");
-        } else {
-            $output->writeln("transcoding failed");
-            $this->videoService->setVideoState($video, Video::FAIL);
-            return;
-        }
-
-        $this->videoService->setVideoState($video, Video::DONE);
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         while (true) {
@@ -73,11 +52,11 @@ class TranscodeCommand extends Command
 
             $videos = $this->videoService->getVideosForTranscode();
             foreach ($videos as $video) {
-                $output->writeln("New video: " . $video->getName() . ", " . $video->getUploader()->getName());
+                $output->writeln("new: " . $video->getName() . ", " . $video->getUploader()->getName());
 
-                $this->handleVideo($video, $output);
+                $this->transcodingService->doTranscode($video, $output);
 
-                $output->writeln("Done");
+                $output->writeln("done");
             }
         }
     }

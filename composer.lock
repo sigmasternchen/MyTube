@@ -4,8 +4,70 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "7a63ec16e3e2daa0fbf514d4aedd88d5",
+  "content-hash": "a08b90e42235f47d768d0ce3aba9a85e",
   "packages": [
+    {
+      "name": "alchemy/binary-driver",
+      "version": "v5.2.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/alchemy-fr/BinaryDriver.git",
+        "reference": "e0615cdff315e6b4b05ada67906df6262a020d22"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/alchemy-fr/BinaryDriver/zipball/e0615cdff315e6b4b05ada67906df6262a020d22",
+        "reference": "e0615cdff315e6b4b05ada67906df6262a020d22",
+        "shasum": ""
+      },
+      "require": {
+        "evenement/evenement": "^3.0|^2.0|^1.0",
+        "php": ">=5.5",
+        "psr/log": "^1.0",
+        "symfony/process": "^2.3|^3.0|^4.0|^5.0"
+      },
+      "require-dev": {
+        "phpunit/phpunit": "^4.0|^5.0"
+      },
+      "type": "library",
+      "autoload": {
+        "psr-0": {
+          "Alchemy": "src"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Nicolas Le Goff",
+          "email": "legoff.n@gmail.com"
+        },
+        {
+          "name": "Romain Neutron",
+          "email": "imprec@gmail.com",
+          "homepage": "http://www.lickmychip.com/"
+        },
+        {
+          "name": "Phraseanet Team",
+          "email": "info@alchemy.fr",
+          "homepage": "http://www.phraseanet.com/"
+        },
+        {
+          "name": "Jens Hausdorf",
+          "email": "mail@jens-hausdorf.de",
+          "homepage": "https://jens-hausdorf.de",
+          "role": "Maintainer"
+        }
+      ],
+      "description": "A set of tools to build binary drivers",
+      "keywords": [
+        "binary",
+        "driver"
+      ],
+      "time": "2020-02-12T19:35:11+00:00"
+    },
     {
       "name": "amphp/amp",
       "version": "v2.5.1",
@@ -853,16 +915,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/brick/math/zipball/283a40c901101e66de7061bd359252c013dcc43c",
-                "reference": "283a40c901101e66de7061bd359252c013dcc43c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.1|^8.0"
-            },
-            "require-dev": {
-                "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^7.5.15|^8.5",
+        "reference": "283a40c901101e66de7061bd359252c013dcc43c",
+        "shasum": ""
+      },
+      "require": {
+        "ext-json": "*",
+        "php": "^7.1|^8.0"
+      },
+      "require-dev": {
+        "php-coveralls/php-coveralls": "^2.2",
+        "phpunit/phpunit": "^7.5.15|^8.5",
                 "vimeo/psalm": "^3.5"
             },
             "type": "library",
@@ -948,14 +1010,14 @@
             ],
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
             "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/composer",
-                  "type": "github"
-                },
+              {
+                "url": "https://packagist.com",
+                "type": "custom"
+              },
+              {
+                "url": "https://github.com/composer",
+                "type": "github"
+              },
               {
                 "url": "https://tidelift.com/funding/github/packagist/composer/composer",
                 "type": "tidelift"
@@ -1014,16 +1076,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/doctrine/annotations/zipball/ce77a7ba1770462cd705a91a151b6c3746f9c6ad",
-                "reference": "ce77a7ba1770462cd705a91a151b6c3746f9c6ad",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/lexer": "1.*",
-                "ext-tokenizer": "*",
-                "php": "^7.1 || ^8.0"
-            },
-            "require-dev": {
-                "doctrine/cache": "1.*",
+        "reference": "ce77a7ba1770462cd705a91a151b6c3746f9c6ad",
+        "shasum": ""
+      },
+      "require": {
+        "doctrine/lexer": "1.*",
+        "ext-tokenizer": "*",
+        "php": "^7.1 || ^8.0"
+      },
+      "require-dev": {
+        "doctrine/cache": "1.*",
                 "doctrine/coding-standard": "^6.0 || ^8.1",
                 "phpstan/phpstan": "^0.12.20",
                 "phpunit/phpunit": "^7.5 || ^9.1.5"
@@ -2319,25 +2381,68 @@
                 "validation",
                 "validator"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/egulias",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-12-29T14:50:06+00:00"
+          "funding": [
+            {
+              "url": "https://github.com/egulias",
+              "type": "github"
+            }
+          ],
+          "time": "2020-12-29T14:50:06+00:00"
         },
+    {
+      "name": "evenement/evenement",
+      "version": "v3.0.1",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/igorw/evenement.git",
+        "reference": "531bfb9d15f8aa57454f5f0285b18bec903b8fb7"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/igorw/evenement/zipball/531bfb9d15f8aa57454f5f0285b18bec903b8fb7",
+        "reference": "531bfb9d15f8aa57454f5f0285b18bec903b8fb7",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=7.0"
+      },
+      "require-dev": {
+        "phpunit/phpunit": "^6.0"
+      },
+      "type": "library",
+      "autoload": {
+        "psr-0": {
+          "Evenement": "src"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
         {
-            "name": "friendsofphp/proxy-manager-lts",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
-                "reference": "4a66e4e0d3279d3bb3722963b4294331fabe15bc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/4a66e4e0d3279d3bb3722963b4294331fabe15bc",
+          "name": "Igor Wiedler",
+          "email": "igor@wiedler.ch"
+        }
+      ],
+      "description": "Événement is a very simple event dispatching library for PHP",
+      "keywords": [
+        "event-dispatcher",
+        "event-emitter"
+      ],
+      "time": "2017-07-23T21:35:13+00:00"
+    },
+    {
+      "name": "friendsofphp/proxy-manager-lts",
+      "version": "v1.0.2",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
+        "reference": "4a66e4e0d3279d3bb3722963b4294331fabe15bc"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/4a66e4e0d3279d3bb3722963b4294331fabe15bc",
                 "reference": "4a66e4e0d3279d3bb3722963b4294331fabe15bc",
                 "shasum": ""
             },
@@ -2394,17 +2499,17 @@
                 "service proxies"
             ],
             "funding": [
-                {
-                    "url": "https://github.com/Ocramius",
-                  "type": "github"
-                },
+              {
+                "url": "https://github.com/Ocramius",
+                "type": "github"
+              },
               {
                 "url": "https://tidelift.com/funding/github/packagist/ocramius/proxy-manager",
                 "type": "tidelift"
               }
             ],
-          "time": "2021-01-04T11:21:26+00:00"
-        },
+      "time": "2021-01-04T11:21:26+00:00"
+    },
     {
       "name": "kelunik/certificate",
       "version": "v1.1.2",
@@ -2465,16 +2570,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/laminas/laminas-code/zipball/28a6d70ea8b8bca687d7163300e611ae33baf82a",
-                "reference": "28a6d70ea8b8bca687d7163300e611ae33baf82a",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-eventmanager": "^3.3",
-                "php": "^7.4 || ~8.0.0"
-            },
-            "conflict": {
-                "phpspec/prophecy": "<1.9.0"
-            },
+        "reference": "28a6d70ea8b8bca687d7163300e611ae33baf82a",
+        "shasum": ""
+      },
+      "require": {
+        "laminas/laminas-eventmanager": "^3.3",
+        "php": "^7.4 || ~8.0.0"
+      },
+      "conflict": {
+        "phpspec/prophecy": "<1.9.0"
+      },
             "replace": {
                 "zendframework/zend-code": "self.version"
             },
@@ -2617,16 +2722,16 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
-            "keywords": [
-                "ZendFramework",
-                "autoloading",
-                "laminas",
-                "zf"
-            ],
+          "license": [
+            "BSD-3-Clause"
+          ],
+          "description": "Alias legacy ZF class names to Laminas Project equivalents.",
+          "keywords": [
+            "ZendFramework",
+            "autoloading",
+            "laminas",
+            "zf"
+          ],
           "funding": [
             {
               "url": "https://funding.communitybridge.org/projects/laminas-project",
@@ -2863,16 +2968,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
-                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2",
-                "psr/log": "^1.0.1"
-            },
-            "provide": {
-                "psr/log-implementation": "1.0.0"
-            },
+        "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=7.2",
+        "psr/log": "^1.0.1"
+      },
+      "provide": {
+        "psr/log-implementation": "1.0.0"
+      },
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
@@ -2935,26 +3040,150 @@
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
-                    "type": "github"
+                  "type": "github"
                 },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
-                    "type": "tidelift"
-                }
+              {
+                "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+                "type": "tidelift"
+              }
             ],
-            "time": "2020-12-14T13:15:25+00:00"
+      "time": "2020-12-14T13:15:25+00:00"
+    },
+    {
+      "name": "neutron/temporary-filesystem",
+      "version": "3.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/romainneutron/Temporary-Filesystem.git",
+        "reference": "60e79adfd16f42f4b888e351ad49f9dcb959e3c2"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/romainneutron/Temporary-Filesystem/zipball/60e79adfd16f42f4b888e351ad49f9dcb959e3c2",
+        "reference": "60e79adfd16f42f4b888e351ad49f9dcb959e3c2",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.6",
+        "symfony/filesystem": "^2.3 || ^3.0 || ^4.0 || ^5.0"
+      },
+      "require-dev": {
+        "symfony/phpunit-bridge": "^5.0.4"
+      },
+      "type": "library",
+      "autoload": {
+        "psr-0": {
+          "Neutron": "src"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Romain Neutron",
+          "email": "imprec@gmail.com"
+        }
+      ],
+      "description": "Symfony filesystem extension to handle temporary files",
+      "time": "2020-07-27T14:00:33+00:00"
+    },
+    {
+      "name": "php-ffmpeg/php-ffmpeg",
+      "version": "v0.17.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/PHP-FFMpeg/PHP-FFMpeg.git",
+        "reference": "a5147d1ae041e78e7870bf2443d4e2dfa7635856"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/PHP-FFMpeg/PHP-FFMpeg/zipball/a5147d1ae041e78e7870bf2443d4e2dfa7635856",
+        "reference": "a5147d1ae041e78e7870bf2443d4e2dfa7635856",
+        "shasum": ""
+      },
+      "require": {
+        "alchemy/binary-driver": "^1.5 || ~2.0.0 || ^5.0",
+        "doctrine/cache": "^1.0",
+        "evenement/evenement": "^3.0 || ^2.0 || ^1.0",
+        "neutron/temporary-filesystem": "^2.1.1 || ^3.0",
+        "php": ">=5.3.9"
+      },
+      "require-dev": {
+        "silex/silex": "~1.0",
+        "symfony/phpunit-bridge": "^5.0.4",
+        "symfony/process": "2.8 || 3.3"
+      },
+      "suggest": {
+        "php-ffmpeg/extras": "A compilation of common audio & video drivers for PHP-FFMpeg"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "0.x-dev"
+        }
+      },
+      "autoload": {
+        "psr-0": {
+          "FFMpeg": "src"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Romain Neutron",
+          "email": "imprec@gmail.com",
+          "homepage": "http://www.lickmychip.com/"
         },
         {
-            "name": "phpdocumentor/reflection-common",
-            "version": "2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/1d01c49d4ed62f25aa84a747ad35d5a16924662b",
+          "name": "Phraseanet Team",
+          "email": "info@alchemy.fr",
+          "homepage": "http://www.phraseanet.com/"
+        },
+        {
+          "name": "Patrik Karisch",
+          "email": "patrik@karisch.guru",
+          "homepage": "http://www.karisch.guru"
+        },
+        {
+          "name": "Romain Biard",
+          "email": "romain.biard@gmail.com",
+          "homepage": "https://www.strime.io/"
+        },
+        {
+          "name": "Jens Hausdorf",
+          "email": "hello@jens-hausdorf.de",
+          "homepage": "https://jens-hausdorf.de"
+        }
+      ],
+      "description": "FFMpeg PHP, an Object Oriented library to communicate with AVconv / ffmpeg",
+      "keywords": [
+        "audio",
+        "audio processing",
+        "avconv",
+        "avprobe",
+        "ffmpeg",
+        "ffprobe",
+        "video",
+        "video processing"
+      ],
+      "time": "2020-12-18T14:31:34+00:00"
+    },
+    {
+      "name": "phpdocumentor/reflection-common",
+      "version": "2.2.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
+        "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/1d01c49d4ed62f25aa84a747ad35d5a16924662b",
                 "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
                 "shasum": ""
             },
@@ -3213,16 +3442,16 @@
                     "Psr\\EventDispatcher\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "MIT"
+          ],
+          "authors": [
+            {
+              "name": "PHP-FIG",
+              "homepage": "http://www.php-fig.org/"
+            }
+          ],
           "description": "Standard interfaces for event handling.",
           "keywords": [
             "events",
@@ -3292,16 +3521,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/php-fig/link/zipball/eea8e8662d5cd3ae4517c9b864493f59fca95562",
-                "reference": "eea8e8662d5cd3ae4517c9b864493f59fca95562",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+        "reference": "eea8e8662d5cd3ae4517c9b864493f59fca95562",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=5.3.0"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {

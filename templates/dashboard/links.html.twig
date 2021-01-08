@@ -6,92 +6,100 @@
 {% endblock %}
 
 {% block body %}
-    <div class="links bg-light shadow-5">
-        <table class="table table-hover">
-            <tr>
-                <td>
-                    <input type="checkbox">
-                </td>
-                <td></td>
-                <th>
-                    Video
-                </th>
-                <th>
-                    Created
-                </th>
-                <th>
-                    Comment
-                </th>
-                <th>
-                    Valid until
-                </th>
-                <th>
-                    Views left
-                </th>
-                <th>
-                    Time left
-                </th>
-                <th>
-                    Link
-                </th>
-            </tr>
-            {% for link in links %}
+    {% if links | length == 0 %}
+        <div class="no-content">
+            No links yet.<br/>
+            Go to the <a href="{{ path("app_dashboard") }}">Dashboard</a> and click the link-icon on a video you want to
+            create a link for.
+        </div>
+    {% else %}
+        <div class="links bg-light shadow-5">
+            <table class="table table-hover">
                 <tr>
                     <td>
                         <input type="checkbox">
                     </td>
-                    <td>
-                        {% if not link.viewable() %}
-                            <i class="fas fa-exclamation-circle"></i>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{{ path("app_watch_page", {
-                            linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
-                            videoId: link.video.customId
-                        }) }}">
-                            <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                    <td></td>
+                    <th>
+                        Video
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Comment
+                    </th>
+                    <th>
+                        Valid until
+                    </th>
+                    <th>
+                        Views left
+                    </th>
+                    <th>
+                        Time left
+                    </th>
+                    <th>
+                        Link
+                    </th>
+                </tr>
+                {% for link in links %}
+                    <tr>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td>
+                            {% if not link.viewable() %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path("app_watch_page", {
                                 linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
                                 videoId: link.video.customId
-                            }) }}"/>
-                            {{ link.video.name }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ link.created | date("Y-m-d") }}
-                    </td>
-                    <td>
-                        {{ link.comment }}
-                    </td>
-                    <td>
-                        {% if link.viewableUntil %}
-                            {{ link.viewableUntil | date("Y-m-d") }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if link.maxViews %}
-                            {{ link.viewsLeft }} / {{ link.maxViews }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if link.viewableFor %}
-                            {{ link.viewableForLeft != null ? link.viewableForLeft : "-" }} / {{ link.viewableFor }} h
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-floating" onclick="clipboard('{{ url("app_watch_page", {
-                            linkId: link.customId,
-                            videoId: link.video.customId
-                        }) }}')"><i class="fas fa-clipboard"></i></button>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
+                            }) }}">
+                                <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                                    linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                    videoId: link.video.customId
+                                }) }}"/>
+                                {{ link.video.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ link.created | date("Y-m-d") }}
+                        </td>
+                        <td>
+                            {{ link.comment }}
+                        </td>
+                        <td>
+                            {% if link.viewableUntil %}
+                                {{ link.viewableUntil | date("Y-m-d") }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if link.maxViews %}
+                                {{ link.viewsLeft }} / {{ link.maxViews }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if link.viewableFor %}
+                                {{ link.viewableForLeft != null ? link.viewableForLeft : "-" }} / {{ link.viewableFor }} h
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-floating" onclick="clipboard('{{ url("app_watch_page", {
+                                linkId: link.customId,
+                                videoId: link.video.customId
+                            }) }}')"><i class="fas fa-clipboard"></i></button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}

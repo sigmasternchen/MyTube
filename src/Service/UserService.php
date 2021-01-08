@@ -27,7 +27,7 @@ class UserService
             return null;
         }
 
-        return $this->getUserByName($user->getUsername());
+        return $this->getUserByEmail($user->getUsername());
     }
 
     public function getUsers(): array
@@ -35,8 +35,8 @@ class UserService
         return $this->userRepository->findAll();
     }
 
-    public function getUserByName($username): ?User
+    public function getUserByEmail($email): ?User
     {
-        return $this->userRepository->findOneByName($username);
+        return $this->userRepository->findOneByEmail($email);
     }
 }

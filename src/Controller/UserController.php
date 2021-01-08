@@ -29,7 +29,7 @@ class UserController extends AbstractController
      */
     public function userProfilePicture($username): Response
     {
-        $user = $this->userService->getUserByName($username);
+        $user = $this->userService->getUserByEmail($username);
         if (!$user) {
             throw new NotFoundHttpException();
         }

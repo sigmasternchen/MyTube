@@ -51,7 +51,7 @@ class VideoLinkService
     {
         return array_map(function ($videoLink) {
             return $this->evaluate($videoLink);
-        }, $this->videoLinkRepository->findByCreator($user));
+        }, $this->videoLinkRepository->findBy(["creator" => $user], ["created" => "DESC"]));
     }
 
     public function add($videoLink): void

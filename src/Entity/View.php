@@ -24,13 +24,13 @@ class View
 
     /**
      * @ORM\ManyToOne(targetEntity=Video::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $video;
 
     /**
      * @ORM\ManyToOne(targetEntity=VideoLink::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $link;
 

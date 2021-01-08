@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\VideoRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -61,11 +60,6 @@ class Video
      * @ORM\Column(type="integer")
      */
     private $state = self::QUEUED;
-
-    /**
-     * @ORM\OneToMany(targetEntity=VideoLink::class, mappedBy="video")
-     */
-    private $videoLinks;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -177,36 +171,6 @@ class Video
             default:
                 return "unknown";
         }
-    }
-
-    /**
-     * @return Collection|VideoLink[]
-     */
-    public function getVideoLinks(): Collection
-    {
-        return $this->videoLinks;
-    }
-
-    public function addVideoLink(VideoLink $videoLink): self
-    {
-        if (!$this->videoLinks->contains($videoLink)) {
-            $this->videoLinks[] = $videoLink;
-            $videoLink->setVideo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVideoLink(VideoLink $videoLink): self
-    {
-        if ($this->videoLinks->removeElement($videoLink)) {
-            // set the owning side to null (unless already changed)
-            if ($videoLink->getVideo() === $this) {
-                $videoLink->setVideo(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getCustomId(): string

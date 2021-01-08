@@ -24,8 +24,8 @@ class VideoLink
     private $customId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Video::class, inversedBy="videoLinks")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Video::class)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $video;
 
@@ -55,7 +55,7 @@ class VideoLink
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $creator;
 

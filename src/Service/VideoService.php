@@ -26,7 +26,7 @@ class VideoService
 
     public function getVideos(User $user): array
     {
-        return $this->videoRepository->findByUploader($user);
+        return $this->videoRepository->findBy(["uploader" => $user], ["uploaded" => "DESC"]);
     }
 
     public function addVideo(Video $video, UploadedFile $file)

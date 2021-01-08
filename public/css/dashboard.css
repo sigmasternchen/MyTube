@@ -86,15 +86,15 @@
     color: lightgray;
 }
 
-.link {
+.buttons {
     position: absolute;
-    top: calc(9 / 16 * 100% + 12%);
+    bottom: 3%;
     right: 3%;
 }
 
-.link a {
+/*.buttons a {
     color: #9f44b4;
-}
+}*/
 
 .link:hover a {
     color: grey;
@@ -122,11 +122,18 @@
     background-color: lightgrey;
 }
 
-.views {
+.views, .length {
     position: absolute;
     font-size: 1vw;
-    top: 69%;
-    right: 10%;
+    right: 3%;
+}
+
+.views {
+    top: calc(9 / 16 * 100% + 4%);
+}
+
+.length {
+    top: calc(9 / 16 * 100% + 4% + 5%);
 }
 
 .no-content {

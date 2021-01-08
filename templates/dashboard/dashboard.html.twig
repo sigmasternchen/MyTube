@@ -64,10 +64,19 @@
                             </div>
                         </div>
                         <div class="info">
-                            <div class="link">
-                                <a href="{{ path("app_new_link") }}?video={{ video.customId | url_encode }}">
+                            <div class="buttons btn-group btn-group-sm">
+                                <button class="btn btn-primary"
+                                        onclick="location.href='{{ path("app_new_link") }}?video={{ video.customId | url_encode }}'">
                                     <i class="fas fa-link"></i>
-                                </a>
+                                </button>
+                                <button class="btn btn-primary"
+                                        onclick="">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                                <button class="btn btn-primary btn-danger"
+                                        onclick="">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                             <h5>{{ video.name }}</h5>
                             <div class="views">

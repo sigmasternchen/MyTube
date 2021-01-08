@@ -19,12 +19,9 @@
                             element.getElementsByClassName("disable")[0].remove();
                             clearInterval(intervalIds[id]);
                         } else {
-
                             if (data.stateId > {{ constant("App\\Entity\\Video::PROCESSING_THUMBNAIL") }}) {
                                 let image = element.getElementsByClassName("thumbnail")[0].getElementsByTagName("img")[0];
-                                if (image.hasAttribute("data-src")) {
-                                    image.src = image.getAttribute("data-src");
-                                }
+                                image.src = image.src + "?refresh";
                             }
 
                             element.getElementsByClassName("state")[0].innerText = data.state;
@@ -58,11 +55,10 @@
                             videoId: video.customId
                         }) }}'">
                             <img alt="Thumbnail"
-                            {{ video.state > constant("App\\Entity\\Video::PROCESSING_THUMBNAIL") ? "src" : "data-src" }}
-                            ="{{ path("app_watch_thumbnail", {
-                                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
-                                videoId: video.customId
-                            }) }}"/>
+                                 src="{{ path("app_watch_thumbnail", {
+                                     linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                     videoId: video.customId
+                                 }) }}"/>
                             <div class="play-button">
                                 <i class="fas fa-play"></i>
                             </div>
@@ -76,6 +72,9 @@
                             <h5>{{ video.name }}</h5>
                             <div class="views">
                                 {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
+                            </div>
+                            <div class="length">
+                                {{ video.getFormatedLength() }}
                             </div>
                             <p>
                                 {{ video.description }}

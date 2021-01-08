@@ -26,6 +26,7 @@ class WatchController extends AbstractController
     public const OWNER_LINK_ID = "owner";
     public const CONTENT_RELATIVE = "../";
     public const CONTENT_DIRECTORY = "content/videos/";
+    public const PUBLIC_DIRECTORY = "public/";
 
     private const PLAYLIST_MIME_TYPE = "application/x-mpegURL";
     private const TS_FILE_MIME_TYPE = "video/MP2T";
@@ -158,7 +159,11 @@ class WatchController extends AbstractController
     {
         $data = $this->checkRequestData($videoId, $linkId);
 
-        $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "thumb.png";
+        if ($data["video"]->getState() > Video::PROCESSING_THUMBNAIL) {
+            $file = self::CONTENT_RELATIVE . self::CONTENT_DIRECTORY . $data["video"]->getId() . "/" . "thumb.png";
+        } else {
+            $file = self::CONTENT_RELATIVE . self::PUBLIC_DIRECTORY . "images/no-video.png";
+        }
 
         $response = new BinaryFileResponse($file);
         $response->headers->set("Content-Type", self::THUMBNAIL_MIME_TYPE);

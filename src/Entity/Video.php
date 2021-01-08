@@ -225,6 +225,31 @@ class Video
         return $this->length;
     }
 
+    public function getFormatedLength(): string
+    {
+        if (!$this->length) {
+            return "";
+        } else {
+            $length = $this->length;
+            $result = "";
+
+            while ($length > 0) {
+                $currentPosition = $length % 60;
+                $length = intval($length / 60);
+
+                $result = sprintf("%02d:", $currentPosition) . $result;
+            }
+
+            $result = substr($result, 0, strlen($result) - 1);
+
+            if (strlen($result) == 2) {
+                $result = "00:" . $result;
+            }
+
+            return $result;
+        }
+    }
+
     public function setLength(?float $length): self
     {
         $this->length = $length;

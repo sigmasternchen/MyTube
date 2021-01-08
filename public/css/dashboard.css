@@ -9,7 +9,6 @@
 
 .video-tile {
     position: relative;
-    padding: 3%;
 }
 
 .video-tile:after {
@@ -19,7 +18,11 @@
 }
 
 .tile-content {
-    position: relative;
+    position: absolute;
+    left: 8.5%;
+    top: 8.5%;
+    height: 83%;
+    width: 83%;
 }
 
 .thumbnail {

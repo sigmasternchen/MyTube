@@ -13,6 +13,8 @@
                     <input type="checkbox">
                 </th>
                 <th>
+                </th>
+                <th>
                     Username
                 </th>
                 <th>
@@ -26,6 +28,13 @@
                 <tr>
                     <td>
                         <input type="checkbox">
+                    </td>
+                    <td>
+                        <img
+                                src="{{ path("app_user_profile_picture", {"username": user.username}) }}"
+                                class="rounded-circle avatar"
+                                alt=""
+                        />
                     </td>
                     <td>
                         {{ user.name }}

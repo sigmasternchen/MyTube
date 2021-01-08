@@ -68,10 +68,11 @@
                                 aria-expanded="false"
                         >
                             <img
-                                    src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
+                                    src="{{ is_granted('ROLE_USER')
+                                    ? path("app_user_profile_picture", {"username": app.user.username})
+                                    : asset("images/user.png") }}"
                                     class="rounded-circle avatar"
                                     alt=""
-                                    loading="lazy"
                             />
                         </a>
                         <ul class="dropdown-menu avatar-dropdown" aria-labelledby="navbarDropdownMenuLink">

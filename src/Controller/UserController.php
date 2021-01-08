@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,6 +19,15 @@ class UserController extends AbstractController
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
+    }
+
+    /**
+     * @Route("/user/{username}/picture", name="app_user_profile_picture")
+     */
+    public function userProfilePicture($username): Response
+    {
+        // placeholder
+        return new BinaryFileResponse("../public/images/user.png");
     }
 
     /**

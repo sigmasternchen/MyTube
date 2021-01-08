@@ -9,10 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    private const USER_RELATIVE = "../";
+    private const USER_DIRECTORY = "content/users/";
 
     private $userService;
 
@@ -26,8 +29,18 @@ class UserController extends AbstractController
      */
     public function userProfilePicture($username): Response
     {
-        // placeholder
-        return new BinaryFileResponse("../public/images/user.png");
+        $user = $this->userService->getUserByName($username);
+        if (!$user) {
+            throw new NotFoundHttpException();
+        }
+
+        $file = self::USER_RELATIVE . self::USER_DIRECTORY . $user->getId() . "/profile.png";
+
+        if (file_exists($file)) {
+            return new BinaryFileResponse($file);
+        } else {
+            return new BinaryFileResponse("../public/images/user.png");
+        }
     }
 
     /**

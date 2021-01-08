@@ -25,7 +25,7 @@ class WatchController extends AbstractController
 
     public const OWNER_LINK_ID = "owner";
     public const CONTENT_RELATIVE = "../";
-    public const CONTENT_DIRECTORY = "content/";
+    public const CONTENT_DIRECTORY = "content/videos/";
 
     private const PLAYLIST_MIME_TYPE = "application/x-mpegURL";
     private const TS_FILE_MIME_TYPE = "video/MP2T";

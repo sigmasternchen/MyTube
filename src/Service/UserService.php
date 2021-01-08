@@ -27,13 +27,16 @@ class UserService
             return null;
         }
 
-        $user = $this->userRepository->findOneByName($user->getUsername());
-
-        return $user;
+        return $this->getUserByName($user->getUsername());
     }
 
     public function getUsers(): array
     {
         return $this->userRepository->findAll();
+    }
+
+    public function getUserByName($username): ?User
+    {
+        return $this->userRepository->findOneByName($username);
     }
 }

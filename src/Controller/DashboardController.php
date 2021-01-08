@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractController
 {
     public const DELETE_VIDEO_CSRF_TOKEN_ID = "delete-video";
+    public const DELETE_LINK_CSRF_TOKEN_ID = "delete-link";
 
     private $userService;
     private $videoService;
@@ -107,7 +108,7 @@ class DashboardController extends AbstractController
     /**
      * @Route("/video/delete", name="app_video_delete", methods={"POST"})
      */
-    public function delete(Request $request): Response
+    public function deleteVideo(Request $request): Response
     {
         $token = $request->request->get("csrfToken");
         $videoId = $request->request->get("videoId");
@@ -240,5 +241,37 @@ class DashboardController extends AbstractController
             "video" => $video,
             "form" => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/links/delete", name="app_link_delete", methods={"POST"})
+     */
+    public function deleteLink(Request $request): Response
+    {
+        $token = $request->request->get("csrfToken");
+        $linkId = $request->request->get("linkId");
+
+        if (!$this->isCsrfTokenValid(self::DELETE_LINK_CSRF_TOKEN_ID, $token)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (!$linkId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $linkId = $this->uuidMapper->fromString($linkId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $link = $this->videoLinkService->get($linkId);
+        if ($link == null || $link->getCreator() != $this->userService->getLoggedInUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->videoLinkService->delete($link);
+
+        return $this->redirectToRoute("app_links");
     }
 }

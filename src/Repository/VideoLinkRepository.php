@@ -58,4 +58,10 @@ class VideoLinkRepository extends ServiceEntityRepository
     {
         $this->_em->flush();
     }
+
+    public function delete(VideoLink $link)
+    {
+        $this->_em->remove($link);
+        $this->_em->flush();
+    }
 }

@@ -135,22 +135,3 @@
 .length {
     top: calc(9 / 16 * 100% + 4% + 5%);
 }
-
-.no-content {
-    margin-left: 3%;
-}
-
-.deleteToggle:after {
-    display: none;
-}
-
-.deleteConfirm {
-    text-align: center;
-    padding: 1vw;
-    font-size: 1vw;
-    min-width: 14vw;
-}
-
-.deleteButton {
-    color: red;
-}

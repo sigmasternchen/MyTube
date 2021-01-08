@@ -58,4 +58,9 @@ class VideoLinkService
     {
         $this->videoLinkRepository->save($videoLink);
     }
+
+    public function delete(VideoLink $link)
+    {
+        $this->videoLinkRepository->delete($link);
+    }
 }

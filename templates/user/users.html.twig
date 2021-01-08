@@ -15,7 +15,7 @@
                 <th>
                 </th>
                 <th>
-                    Username
+                    Name
                 </th>
                 <th>
                     Email
@@ -40,7 +40,7 @@
                         {{ user.name }}
                     </td>
                     <td>
-                        [not yet implemented]
+                        {{ user.email }}
                     </td>
                     <td>
                         {% for role in user.getReadableRoles() %}

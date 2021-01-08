@@ -6,11 +6,18 @@
 {% endblock %}
 
 {% block body %}
-    <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
-        linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
-        videoId: video.customId
-    }) }}"/>
-    {{ video.name }}
+    <div class="video">
+        <a href="{{ path("app_watch_page", {
+            linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+            videoId: video.customId
+        }) }}" target="_blank">
+            <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                videoId: video.customId
+            }) }}"/>
+            {{ video.name }}
+        </a>
+    </div>
 
     {{ form(form) }}
 {% endblock %}

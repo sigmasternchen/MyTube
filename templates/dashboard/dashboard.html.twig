@@ -39,6 +39,7 @@
 {% endblock %}
 
 {% block body %}
+    {% set deleteCsrfToken = csrf_token(constant("App\\Controller\\DashboardController::DELETE_VIDEO_CSRF_TOKEN_ID")) %}
     <div class="grid-container">
         <script>var autoupdate = [];</script>
         <div class="row">
@@ -66,17 +67,35 @@
                         <div class="info">
                             <div class="buttons btn-group btn-group-sm">
                                 <button class="btn btn-primary"
-                                        onclick="location.href='{{ path("app_new_link") }}?video={{ video.customId | url_encode }}'">
+                                        onclick="location.href='{{ path("app_new_link") }}?video={{ video.customId }}'">
                                     <i class="fas fa-link"></i>
                                 </button>
                                 <button class="btn btn-primary"
                                         onclick="">
                                     <i class="fas fa-cog"></i>
                                 </button>
-                                <button class="btn btn-primary btn-danger"
-                                        onclick="">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <form action="{{ path("app_video_delete") }}" method="POST">
+                                    <input type="hidden" name="videoId" value="{{ video.customId }}">
+                                    <input type="hidden" name="csrfToken" value="{{ deleteCsrfToken }}">
+                                    <button class="btn btn-primary btn-danger dropdown-toggle deleteToggle"
+                                            id="{{ video.customId }}-deleteDropDown"
+                                            data-mdb-toggle="dropdown"
+                                            aria-expanded="false"
+                                            onclick="">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end deleteConfirm"
+                                         id="{{ video.customId }}-deleteDropDownMenu"
+                                         aria-labelledby="{{ video.customId }}-deleteDropDown">
+                                        Do you really want to delete "{{ video.name }}"?<br/>
+                                        <button class="btn btn-link deleteButton">YES</button>
+                                        <button class="btn btn-primary" onclick="removeClass('show', [
+                                                '#{{ video.customId }}-deleteDropDown',
+                                                '#{{ video.customId }}-deleteDropDownMenu'
+                                                ]); return false;">NO
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <h5>{{ video.name }}</h5>
                             <div class="views">

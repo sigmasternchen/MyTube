@@ -25,6 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
+    public const DELETE_VIDEO_CSRF_TOKEN_ID = "delete-video";
+
     private $userService;
     private $videoService;
     private $videoLinkService;
@@ -100,6 +102,38 @@ class DashboardController extends AbstractController
         return $this->render("dashboard/upload.html.twig", [
             "form" => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/video/delete", name="app_video_delete", methods={"POST"})
+     */
+    public function delete(Request $request): Response
+    {
+        $token = $request->request->get("csrfToken");
+        $videoId = $request->request->get("videoId");
+
+        if (!$this->isCsrfTokenValid(self::DELETE_VIDEO_CSRF_TOKEN_ID, $token)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (!$videoId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $videoId = $this->uuidMapper->fromString($videoId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $video = $this->videoService->get($videoId);
+        if ($video == null || $video->getUploader() != $this->userService->getLoggedInUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->videoService->delete($video);
+
+        return $this->redirectToRoute("app_dashboard");
     }
 
     /**

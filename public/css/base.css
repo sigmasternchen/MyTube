@@ -18,12 +18,6 @@
     height: 30px;
 }
 
-.avatar-dropdown {
-    /*top: calc(100% + 0.40rem);
-    right: -0.75rem;*/
-    left: auto !important;
-}
-
 .container {
     position: relative;
 }

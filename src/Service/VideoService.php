@@ -52,4 +52,9 @@ class VideoService
     {
         return $this->videoRepository->findOneById($videoId);
     }
+
+    public function delete(Video $video)
+    {
+        $this->videoRepository->delete($video);
+    }
 }

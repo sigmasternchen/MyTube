@@ -99,6 +99,7 @@ class TranscodingService
         foreach (self::QUALITY as $quality) {
             if ($quality["height"] > $height) {
                 $total--;
+                continue;
             }
 
             $ffvideo = $this->ffmpeg->open($this->rawPath($video->getId()));

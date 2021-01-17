@@ -65,14 +65,22 @@
                 </p>
             </video>
         </div>
-        <div id="description" class="bg-light shadow-5-strong">
+        <div id="info" class="bg-light shadow-5-strong">
+            <div class="user">
+                <img
+                        src="{{ path("app_user_profile_picture", {"username": video.uploader.username}) }}"
+                        class="rounded-circle avatar"
+                        alt=""
+                />
+                <span>{{ video.uploader.name }}</span>
+            </div>
             <h2>{{ video.name }}</h2>
             <div class="views">
                 {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
             </div>
-            <p>
+            <div class="description">
                 {{ video.description }}
-            </p>
+            </div>
         </div>
         <div id="set" class="bg-light shadow-5-strong">
             <h2>Set</h2>

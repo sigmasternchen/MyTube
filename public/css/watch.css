@@ -19,7 +19,7 @@
     padding: 1%;
 }
 
-#description {
+#info {
     width: 73.5%;
     padding: 1%;
     position: relative;
@@ -29,4 +29,26 @@
     position: absolute;
     top: 7%;
     right: 3%;
+}
+
+.user {
+}
+
+.user img {
+    height: 3vw;
+    margin-right: 1vw;
+}
+
+.user span {
+    font-size: 1vw;
+}
+
+h2 {
+    position: absolute;
+    top: 1vw;
+    left: 10vw;
+}
+
+.description {
+    margin-left: 4vw;
 }

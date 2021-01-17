@@ -263,6 +263,12 @@ class DashboardController extends AbstractController
             return $this->redirectToRoute("app_dashboard");
         }
 
+        $user = $this->userService->getLoggedInUser();
+
+        if ($video->getUploader() != $user) {
+            throw new AccessDeniedHttpException();
+        }
+
         $videoLink = new VideoLink();
         $videoLink->setVideo($video);
         $form = $this->createForm(VideoLinkType::class, $videoLink);
@@ -271,7 +277,6 @@ class DashboardController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $videoLink = $form->getData();
 
-            $user = $this->userService->getLoggedInUser();
             $videoLink->setCreator($user);
 
             $videoLink->setCreated();
@@ -345,6 +350,11 @@ class DashboardController extends AbstractController
         $videoLink = $this->videoLinkService->get($linkId);
         if (!$videoLink) {
             return $this->redirectToRoute("app_dashboard");
+        }
+
+        $user = $this->userService->getLoggedInUser();
+        if ($videoLink->getCreator() != $user) {
+            throw new AccessDeniedHttpException();
         }
 
         $form = $this->createForm(VideoLinkType::class, $videoLink);

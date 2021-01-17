@@ -106,6 +106,52 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/video/edit", name="app_video_edit")
+     */
+    public function editVideo(Request $request): Response
+    {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $videoId = $request->query->get("video");
+
+        if (!$videoId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $videoId = $this->uuidMapper->fromString($videoId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $video = $this->videoService->get($videoId);
+        if ($video == null || $video->getUploader() != $this->userService->getLoggedInUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->createForm(VideoType::class, $video, ["file" => false]);
+
+        $saveOk = false;
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $video = $form->getData();
+
+            $saveOk = true;
+
+            $this->videoService->update($video);
+        }
+
+        return $this->render("dashboard/video-edit.html.twig", [
+            "form" => $form->createView(),
+            "ok" => $saveOk
+        ]);
+    }
+
+    /**
      * @Route("/video/delete", name="app_video_delete", methods={"POST"})
      */
     public function deleteVideo(Request $request): Response

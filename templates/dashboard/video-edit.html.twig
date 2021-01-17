@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block javascripts %}
+    {% if ok %}
+        <script>
+            window.setTimeout(function () {
+                toast("Saved");
+            }, 0);
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Video</h1>
+    {{ form(form) }}
+{% endblock %}

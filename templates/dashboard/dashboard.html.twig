@@ -66,14 +66,13 @@
                         </div>
                         <div class="info">
                             <div class="buttons btn-group btn-group-sm">
-                                <button class="btn btn-primary"
-                                        onclick="location.href='{{ path("app_new_link") }}?video={{ video.customId }}'">
+                                <a class="btn btn-primary" href="{{ path("app_new_link") }}?video={{ video.customId }}">
                                     <i class="fas fa-link"></i>
-                                </button>
-                                <button class="btn btn-primary"
-                                        onclick="alert('not yet implemented')">
+                                </a>
+                                <a class="btn btn-primary"
+                                   href="{{ path("app_video_edit") }}?video={{ video.customId }}">
                                     <i class="fas fa-cog"></i>
-                                </button>
+                                </a>
                                 <form action="{{ path("app_video_delete") }}" method="POST">
                                     <input type="hidden" name="videoId" value="{{ video.customId }}">
                                     <input type="hidden" name="csrfToken" value="{{ deleteCsrfToken }}">

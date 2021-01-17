@@ -20,8 +20,10 @@ class VideoType extends AbstractType
     {
         $builder
             ->add("name", TextType::class)
-            ->add("description", TextareaType::class)
-            ->add("file", FileType::class, [
+            ->add("description", TextareaType::class);
+
+        if ($options["file"]) {
+            $builder->add("file", FileType::class, [
                 "label" => "Video File",
                 "mapped" => false,
                 "required" => true,
@@ -40,14 +42,17 @@ class VideoType extends AbstractType
                         "mimeTypesMessage" => "Video type not supported."
                     ])
                 ]
-            ])
-            ->add("submit", SubmitType::class);
+            ]);
+        }
+
+        $builder->add("submit", SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Video::class,
+            "data_class" => Video::class,
+            "file" => true,
         ]);
     }
 

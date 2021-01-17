@@ -22,6 +22,7 @@ class User implements UserInterface
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      */
     private $id;
+    private $customId;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -182,6 +183,17 @@ class User implements UserInterface
     public function setEmail($email): self
     {
         $this->email = $email;
+        return $this;
+    }
+
+    public function getCustomId(): string
+    {
+        return $this->customId;
+    }
+
+    public function setCustomId(string $customId): self
+    {
+        $this->customId = $customId;
         return $this;
     }
 }

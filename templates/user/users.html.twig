@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body %}
+    {% set deleteCsrfToken = csrf_token(constant("App\\Controller\\UserController::DELETE_USER_CSRF_TOKEN_ID")) %}
     <div class="users bg-light shadow-5">
         <table class="table">
             <tr>
@@ -22,6 +23,8 @@
                 </th>
                 <th>
                     Roles
+                </th>
+                <th>
                 </th>
             </tr>
             {% for user in users %}
@@ -46,6 +49,39 @@
                         {% for role in user.getReadableRoles() %}
                             <div class="customChip">{{ role }}</div>
                         {% endfor %}
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a class="btn btn-link" href="">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                            <form action="{{ path("app_user_delete") }}" method="POST">
+                                <input type="hidden" name="userId" value="{{ user.customId }}">
+                                <input type="hidden" name="csrfToken" value="{{ deleteCsrfToken }}">
+                                <button class="btn btn-link dropdown-toggle deleteToggle"
+                                        id="-deleteDropDown"
+                                        data-mdb-toggle="dropdown"
+                                        aria-expanded="false"
+                                        onclick=""
+                                        {% if user.id == current.id %}
+                                            disabled
+                                        {% endif %}
+                                >
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end deleteConfirm"
+                                     id="-deleteDropDownMenu"
+                                     aria-labelledby="-deleteDropDown">
+                                    Do you really want to delete this user?<br/>
+                                    <button class="btn btn-link deleteButton">YES</button>
+                                    <button class="btn btn-primary" onclick="removeClass('show', [
+                                            '#-deleteDropDown',
+                                            '#-deleteDropDownMenu'
+                                            ]); return false;">NO
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

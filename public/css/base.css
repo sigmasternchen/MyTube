@@ -48,3 +48,11 @@
 .no-wrap {
     white-space: nowrap;
 }
+
+.deleteToggle {
+    color: red;
+}
+
+.deleteToggle:disabled {
+    color: dimgrey;
+}

@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\Security;
 
 class UserService
@@ -38,5 +39,15 @@ class UserService
     public function getUserByEmail($email): ?User
     {
         return $this->userRepository->findOneByEmail($email);
+    }
+
+    public function delete($user)
+    {
+        $this->userRepository->delete($user);
+    }
+
+    public function get(UUIDInterface $userId)
+    {
+        return $this->userRepository->findOneById($userId);
     }
 }

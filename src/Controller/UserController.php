@@ -4,11 +4,15 @@
 namespace App\Controller;
 
 
+use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
+use Doctrine\DBAL\Types\ConversionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,11 +21,18 @@ class UserController extends AbstractController
     private const USER_RELATIVE = "../";
     private const USER_DIRECTORY = "content/users/";
 
-    private $userService;
+    public const DELETE_USER_CSRF_TOKEN_ID = "delete-user";
 
-    public function __construct(UserService $userService)
+    private $userService;
+    private $uuidMapper;
+
+    public function __construct(
+        UserService $userService,
+        CustomUuidMapper $uuidMapper
+    )
     {
         $this->userService = $userService;
+        $this->uuidMapper = $uuidMapper;
     }
 
     /**
@@ -53,10 +64,55 @@ class UserController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $users = $this->userService->getUsers();
+        $users = array_map(function ($user) {
+            $user->setCustomId($this->uuidMapper->toString($user->getId()));
+            return $user;
+        }, $this->userService->getUsers());
 
         return $this->render("user/users.html.twig", [
+            "current" => $this->userService->getLoggedInUser(),
             "users" => $users
         ]);
+    }
+
+    /**
+     * @Route("/admin/users/delete", name="app_user_delete")
+     */
+    public function userDelete(Request $request): Response
+    {
+        if (!$this->isGranted("ROLE_ADMIN")) {
+            // not logged in
+            throw new AccessDeniedHttpException();
+        }
+
+        $token = $request->request->get("csrfToken");
+        $userId = $request->request->get("userId");
+
+        if (!$this->isCsrfTokenValid(self::DELETE_USER_CSRF_TOKEN_ID, $token)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (!$userId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $userId = $this->uuidMapper->fromString($userId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $user = $this->userService->get($userId);
+        if ($user == null) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($user == $this->userService->getLoggedInUser()) {
+            throw new BadRequestHttpException();
+        }
+
+        $this->userService->delete($user);
+
+        return $this->redirectToRoute("app_user_list");
     }
 }

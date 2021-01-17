@@ -15,6 +15,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public const ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+    public const ROLE_ADMIN = "ROLE_ADMIN";
+    public const ROLE_USER = "ROLE_USER";
+
     /**
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
@@ -195,5 +199,10 @@ class User implements UserInterface
     {
         $this->customId = $customId;
         return $this;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return in_array(self::ROLE_SUPER_ADMIN, $this->getRoles());
     }
 }

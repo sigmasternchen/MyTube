@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Entity\Video;
 use App\Entity\VideoLink;
 use App\Form\VideoLinkType;
@@ -55,7 +56,7 @@ class DashboardController extends AbstractController
      */
     public function dashboard(): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -78,7 +79,7 @@ class DashboardController extends AbstractController
      */
     public function upload(Request $request): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -110,7 +111,7 @@ class DashboardController extends AbstractController
      */
     public function editVideo(Request $request): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -188,7 +189,7 @@ class DashboardController extends AbstractController
      */
     public function uploadStatus($videoId): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -218,7 +219,7 @@ class DashboardController extends AbstractController
      */
     public function showLinks(): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -242,7 +243,7 @@ class DashboardController extends AbstractController
      */
     public function newLink(Request $request): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }
@@ -331,7 +332,7 @@ class DashboardController extends AbstractController
      */
     public function editLink(Request $request): Response
     {
-        if (!$this->isGranted("ROLE_USER")) {
+        if (!$this->isGranted(User::ROLE_USER)) {
             // not logged in
             return $this->redirectToRoute("app_login");
         }

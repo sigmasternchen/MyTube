@@ -65,8 +65,6 @@ class WatchController extends AbstractController
             return self::NOT_ALLOWED;
         }
 
-        // TODO: check constraints
-
         if (!$link->viewable($strict)) {
             return self::NOT_ALLOWED;
         }

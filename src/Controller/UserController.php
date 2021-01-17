@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
 use Doctrine\DBAL\Types\ConversionException;
@@ -59,7 +60,7 @@ class UserController extends AbstractController
      */
     public function userList(): Response
     {
-        if (!$this->isGranted("ROLE_ADMIN")) {
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
             // not logged in
             throw new AccessDeniedHttpException();
         }
@@ -80,7 +81,8 @@ class UserController extends AbstractController
      */
     public function userDelete(Request $request): Response
     {
-        if (!$this->isGranted("ROLE_ADMIN")) {
+
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
             // not logged in
             throw new AccessDeniedHttpException();
         }
@@ -109,6 +111,10 @@ class UserController extends AbstractController
 
         if ($user == $this->userService->getLoggedInUser()) {
             throw new BadRequestHttpException();
+        }
+
+        if ($user->isSuperAdmin()) {
+            throw new AccessDeniedHttpException();
         }
 
         $this->userService->delete($user);

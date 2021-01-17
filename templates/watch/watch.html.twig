@@ -47,39 +47,41 @@
 
 {% block body %}
     <div class="pane-container">
-        <div id="player" class="shadow-5-strong">
-            <video
-                    id="video"
-                    class="video-js vjs-theme-fantasy"
-                    controls
-                    preload="auto"
-                    poster="{{ thumbnail }}"
-                    data-setup="{}"
-            >
-                <!--<source src="{{ global }}#.m3u8" type="application/vnd.apple.mpegur" />-->
-                <source src="{{ global }}#.m3u8" type="application/x-mpegURL"/>
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
-            </video>
-        </div>
-        <div id="info" class="bg-light shadow-5-strong">
-            <div class="user">
-                <img
-                        src="{{ path("app_user_profile_picture", {"username": video.uploader.username}) }}"
-                        class="rounded-circle avatar"
-                        alt=""
-                />
-                <span>{{ video.uploader.name }}</span>
+        <div class="bg-light shadow-5-strong col-12">
+            <div id="player">
+                <video
+                        id="video"
+                        class="video-js vjs-theme-fantasy"
+                        controls
+                        preload="auto"
+                        poster="{{ thumbnail }}"
+                        data-setup="{}"
+                >
+                    <!--<source src="{{ global }}#.m3u8" type="application/vnd.apple.mpegur" />-->
+                    <source src="{{ global }}#.m3u8" type="application/x-mpegURL"/>
+                    <p class="vjs-no-js">
+                        To view this video please enable JavaScript, and consider upgrading to a
+                        web browser that
+                        <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                    </p>
+                </video>
             </div>
-            <h2>{{ video.name }}</h2>
-            <div class="views">
-                {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
-            </div>
-            <div class="description">
-                {{ video.description }}
+            <div id="info">
+                <div class="user">
+                    <img
+                            src="{{ path("app_user_profile_picture", {"username": video.uploader.username}) }}"
+                            class="rounded-circle avatar"
+                            alt=""
+                    />
+                    <span>{{ video.uploader.name }}</span>
+                </div>
+                <h2>{{ video.name }}</h2>
+                <div class="views">
+                    {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
+                </div>
+                <div class="description">
+                    {{ video.description }}
+                </div>
             </div>
         </div>
         <div id="set" class="bg-light shadow-5-strong">

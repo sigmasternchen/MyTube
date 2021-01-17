@@ -1,5 +1,4 @@
 #player {
-    width: 73.5%;
 }
 
 #player .video-js {
@@ -7,10 +6,11 @@
 }
 
 .pane-container {
-    position: relative;
+    margin-bottom: 3%;
 }
 
 #set {
+    display: none;
     position: absolute;
     top: 0;
     right: 0;
@@ -20,9 +20,8 @@
 }
 
 #info {
-    width: 73.5%;
-    padding: 1%;
     position: relative;
+    padding: 3%;
 }
 
 .views {

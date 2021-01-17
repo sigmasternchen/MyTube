@@ -50,4 +50,12 @@ class UserService
     {
         return $this->userRepository->findOneById($userId);
     }
+
+    public function add(User $user)
+    {
+        $user->setCreated();
+        $user->setCreator($this->getLoggedInUser());
+
+        $this->userRepository->save($user);
+    }
 }

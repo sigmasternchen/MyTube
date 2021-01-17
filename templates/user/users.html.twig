@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Links{% endblock %}
+{% block title %}Users{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset("css/admin.css") }}">
 {% endblock %}
@@ -88,8 +88,8 @@
         </table>
     </div>
     <div class="addButton">
-        <button type="button" class="btn btn-primary btn-floating">
+        <a type="button" class="btn btn-primary btn-floating" href="{{ path("app_user_add") }}">
             <i class="fas fa-plus"></i>
-        </button>
+        </a>
     </div>
 {% endblock %}

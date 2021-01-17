@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
-    public const ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+    public const ROLE_SUPER_ADMIN = "ROLE_SUPER";
     public const ROLE_ADMIN = "ROLE_ADMIN";
     public const ROLE_USER = "ROLE_USER";
 
@@ -53,6 +54,16 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Video::class, mappedBy="uploader", orphanRemoval=true)
      */
     private $videos;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $creator;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $created;
 
     public function __construct()
     {
@@ -204,5 +215,28 @@ class User implements UserInterface
     public function isSuperAdmin(): bool
     {
         return in_array(self::ROLE_SUPER_ADMIN, $this->getRoles());
+    }
+
+    public function getCreator(): ?self
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?self $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getCreated(): ?DateTimeImmutable
+    {
+        return $this->created;
+    }
+
+    public function setCreated(): self
+    {
+        $this->created = new DateTimeImmutable();
+        return $this;
     }
 }

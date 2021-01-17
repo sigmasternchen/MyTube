@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Form\UserType;
 use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
 use Doctrine\DBAL\Types\ConversionException;
@@ -120,5 +121,35 @@ class UserController extends AbstractController
         $this->userService->delete($user);
 
         return $this->redirectToRoute("app_user_list");
+    }
+
+    /**
+     * @Route("/admin/users/new", name="app_user_add")
+     */
+    public function userAdd(Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            if ($user->isSuperAdmin()) {
+                throw new BadRequestHttpException();
+            }
+
+            $this->userService->add($user);
+
+            return $this->redirectToRoute("app_user_list");
+        }
+
+        return $this->render("user/user-new.html.twig", [
+            "form" => $form->createView()
+        ]);
     }
 }

@@ -24,6 +24,7 @@ class UserFixtures extends Fixture
         $admin = new User();
         $admin->setEmail("admin@mytube");
         $admin->setName("Administrator");
+        $admin->setCreated();
         $admin->setPassword($this->passwordEncoder->encodePassword($admin, "password"));
         $admin->setRoles([User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN, User::ROLE_USER]);
         $manager->persist($admin);

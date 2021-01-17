@@ -320,4 +320,48 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute("app_links");
     }
+
+    /**
+     * @Route("/links/edit", name="app_edit_link")
+     */
+    public function editLink(Request $request): Response
+    {
+        if (!$this->isGranted("ROLE_USER")) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $linkId = $request->query->get("link");
+        if (!$linkId) {
+            return $this->redirectToRoute("app_links");
+        }
+
+        try {
+            $linkId = $this->uuidMapper->fromString($linkId);
+        } catch (ConversionException $e) {
+            return $this->redirectToRoute("app_links");
+        }
+
+        $videoLink = $this->videoLinkService->get($linkId);
+        if (!$videoLink) {
+            return $this->redirectToRoute("app_dashboard");
+        }
+
+        $form = $this->createForm(VideoLinkType::class, $videoLink);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $videoLink = $form->getData();
+
+            $this->videoLinkService->update($videoLink);
+        }
+
+        $video = $videoLink->getVideo();
+        $video->setCustomId($this->uuidMapper->toString($video->getId()));
+
+        return $this->render("dashboard/link-edit.html.twig", [
+            "video" => $video,
+            "form" => $form->createView()
+        ]);
+    }
 }

@@ -63,4 +63,9 @@ class VideoLinkService
     {
         $this->videoLinkRepository->delete($link);
     }
+
+    public function update($videoLink)
+    {
+        $this->videoLinkRepository->update();
+    }
 }

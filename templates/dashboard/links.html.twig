@@ -92,6 +92,9 @@
                                     videoId: link.video.customId
                                 }) }}')"><i class="fas fa-clipboard"></i>
                                 </button>
+                                <a class="btn btn-link" href="{{ path("app_edit_link") }}?link={{ link.customId }}">
+                                    <i class="fas fa-cog"></i>
+                                </a>
                                 <form action="{{ path("app_link_delete") }}" method="POST">
                                     <input type="hidden" name="linkId" value="{{ link.customId }}">
                                     <input type="hidden" name="csrfToken" value="{{ deleteCsrfToken }}">

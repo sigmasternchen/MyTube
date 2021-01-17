@@ -283,7 +283,7 @@ class DashboardController extends AbstractController
 
         $video->setCustomId($this->uuidMapper->toString($video->getId()));
 
-        return $this->render("dashboard/newlink.html.twig", [
+        return $this->render("dashboard/link-new.html.twig", [
             "video" => $video,
             "form" => $form->createView()
         ]);

@@ -28,6 +28,7 @@
                 </th>
             </tr>
             {% for user in users %}
+                {% set canEdit = (user.id == current.id) or (user.isSuperAdmin()) %}
                 <tr>
                     <td>
                         <input type="checkbox">
@@ -52,7 +53,8 @@
                     </td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a class="btn btn-link" href="">
+                            <a class="btn btn-link {% if canEdit %}disabled{% endif %}"
+                               href="{{ path("app_user_edit") }}?user={{ user.customId }}">
                                 <i class="fas fa-cog"></i>
                             </a>
                             <form action="{{ path("app_user_delete") }}" method="POST">
@@ -63,7 +65,7 @@
                                         data-mdb-toggle="dropdown"
                                         aria-expanded="false"
                                         onclick=""
-                                        {% if (user.id == current.id) or (user.isSuperAdmin()) %}
+                                        {% if canEdit %}
                                             disabled
                                         {% endif %}
                                 >

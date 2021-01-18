@@ -152,4 +152,55 @@ class UserController extends AbstractController
             "form" => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/admin/users/edit", name="app_user_edit")
+     */
+    public function userEdit(Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_ADMIN)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $userId = $request->query->get("user");
+
+        if (!$userId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $userId = $this->uuidMapper->fromString($userId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $user = $this->userService->get($userId);
+        if ($user == null) {
+            throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(UserType::class, $user, [
+            "password_optional" => true
+        ]);
+
+        $okay = false;
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            if ($user->isSuperAdmin()) {
+                throw new BadRequestHttpException();
+            }
+
+            $this->userService->update($user);
+
+            $okay = true;
+        }
+
+        return $this->render("user/user-new.html.twig", [
+            "ok" => $okay,
+            "form" => $form->createView()
+        ]);
+    }
 }

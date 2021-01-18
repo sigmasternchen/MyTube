@@ -28,8 +28,9 @@ class UserType extends AbstractType
                 "multiple" => true,
                 "expanded" => true,
             ])
-            ->add("password", PasswordType::class, [
-                "always_empty" => true
+            ->add("newPassword", PasswordType::class, [
+                "always_empty" => true,
+                "required" => !$options["password_optional"]
             ])
             ->add("submit", SubmitType::class);
     }
@@ -37,7 +38,8 @@ class UserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            "data_class" => User::class
+            "data_class" => User::class,
+            "password_optional" => false
         ]);
     }
 

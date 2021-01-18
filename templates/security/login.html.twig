@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block body %}
     <form method="post">
@@ -15,7 +15,7 @@
         {% endif %}
 
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputName">Name</label>
+        <label for="inputName">E-Mail</label>
         <input type="text" value="{{ last_username }}" name="email" id="inputName" class="form-control" required
                autofocus>
         <label for="inputPassword">Password</label>

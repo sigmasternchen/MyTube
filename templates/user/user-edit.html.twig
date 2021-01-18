@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/admin.css") }}">
+{% endblock %}
+
+{% block javascripts %}
+    {% if ok %}
+        <script>
+            window.setTimeout(function () {
+                toast("Saved");
+            }, 0);
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {{ form(form) }}
+{% endblock %}

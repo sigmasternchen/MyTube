@@ -49,6 +49,7 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+    private $newPassword;
 
     /**
      * @ORM\OneToMany(targetEntity=Video::class, mappedBy="uploader", orphanRemoval=true)
@@ -144,8 +145,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->newPassword = null;
     }
 
     /**
@@ -237,6 +237,17 @@ class User implements UserInterface
     public function setCreated(): self
     {
         $this->created = new DateTimeImmutable();
+        return $this;
+    }
+
+    public function getNewPassword(): ?string
+    {
+        return $this->newPassword;
+    }
+
+    public function setNewPassword(string $newPassword): self
+    {
+        $this->newPassword = $newPassword;
         return $this;
     }
 }

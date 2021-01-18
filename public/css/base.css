@@ -53,6 +53,11 @@
     color: red;
 }
 
-.deleteToggle:disabled {
+.btn:disabled {
+}
+
+a.btn.disabled {
     color: dimgrey;
+    pointer-events: none;
+    cursor: pointer;
 }

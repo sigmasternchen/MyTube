@@ -21,7 +21,9 @@
                         } else {
                             if (data.stateId > {{ constant("App\\Entity\\Video::PROCESSING_THUMBNAIL") }}) {
                                 let image = element.getElementsByClassName("thumbnail")[0].getElementsByTagName("img")[0];
-                                image.src = image.src + "?refresh";
+                                if (image.src.indexOf("?refresh") < 0) {
+                                    image.src = image.src + "?refresh=" + (new Date()).getTime();
+                                }
                             }
 
                             element.getElementsByClassName("state")[0].innerText = data.state;

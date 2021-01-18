@@ -4,9 +4,11 @@
 namespace App\Service;
 
 
+use App\Controller\UserController;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -74,5 +76,34 @@ class UserService
         }
 
         $this->userRepository->update($user);
+    }
+
+    public function setProfilePicture(User $user, UploadedFile $file): bool
+    {
+        $file->move(UserController::USER_RELATIVE . UserController::USER_DIRECTORY . $user->getId(), "/tmp.jpg");
+
+        $image = imagecreatefromjpeg(UserController::USER_RELATIVE . UserController::USER_DIRECTORY . $user->getId() . "/tmp.jpg");
+        $width = imagesx($image);
+        $height = imagesy($image);
+        $size = min($width, $height);
+
+        $cropped = imagecrop($image, [
+            "x" => ($width - $size) / 2,
+            "y" => ($height - $size) / 2,
+            "width" => $size,
+            "height" => $size
+        ]);
+
+        imagedestroy($image);
+        unlink(UserController::USER_RELATIVE . UserController::USER_DIRECTORY . $user->getId() . "/tmp.jpg");
+
+        if ($cropped !== false) {
+            $result = imagejpeg($cropped, UserController::USER_RELATIVE . UserController::USER_DIRECTORY . $user->getId() . UserController::PROFILE_PICTURE_FILE);
+
+            imagedestroy($cropped);
+            return $result;
+        } else {
+            return false;
+        }
     }
 }

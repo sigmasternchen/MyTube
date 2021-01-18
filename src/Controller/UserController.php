@@ -10,6 +10,7 @@ use App\Mapper\CustomUuidMapper;
 use App\Service\UserService;
 use Doctrine\DBAL\Types\ConversionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    private const USER_RELATIVE = "../";
-    private const USER_DIRECTORY = "content/users/";
+    public const USER_RELATIVE = "../";
+    public const USER_DIRECTORY = "content/users/";
+
+    public const PROFILE_PICTURE_FILE = "/profile.jpg";
 
     public const DELETE_USER_CSRF_TOKEN_ID = "delete-user";
 
@@ -38,16 +41,22 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/{username}/picture", name="app_user_profile_picture")
+     * @Route("/user/{id}/picture", name="app_user_profile_picture")
      */
-    public function userProfilePicture($username): Response
+    public function userProfilePicture($id): Response
     {
-        $user = $this->userService->getUserByEmail($username);
+        try {
+            $id = $this->uuidMapper->fromString($id);
+        } catch (ConversionException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        $user = $this->userService->get($id);
         if (!$user) {
             throw new NotFoundHttpException();
         }
 
-        $file = self::USER_RELATIVE . self::USER_DIRECTORY . $user->getId() . "/profile.png";
+        $file = self::USER_RELATIVE . self::USER_DIRECTORY . $user->getId() . self::PROFILE_PICTURE_FILE;
 
         if (file_exists($file)) {
             return new BinaryFileResponse($file);
@@ -218,7 +227,8 @@ class UserController extends AbstractController
 
         $form = $this->createForm(UserType::class, $user, [
             "password_optional" => true,
-            "roles" => false
+            "roles" => false,
+            "profile_picture" => true,
         ]);
 
         $okay = false;
@@ -231,9 +241,19 @@ class UserController extends AbstractController
 
             $user->setRoles($roles);
 
-            $this->userService->update($user);
-
             $okay = true;
+
+            $file = $form->get("file")->getData();
+            if ($file) {
+                if (!$this->userService->setProfilePicture($user, $file)) {
+                    $form->addError(new FormError("Error while processing profile picture."));
+                    $okay = false;
+                }
+            }
+
+            if ($okay) {
+                $this->userService->update($user);
+            }
         }
 
         return $this->render("user/settings.html.twig", [

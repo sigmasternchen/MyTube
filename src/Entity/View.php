@@ -30,7 +30,7 @@ class View
 
     /**
      * @ORM\ManyToOne(targetEntity=VideoLink::class)
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $link;
 

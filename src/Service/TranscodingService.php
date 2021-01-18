@@ -5,12 +5,14 @@ namespace App\Service;
 
 use App\Controller\WatchController;
 use App\Entity\Video;
+use App\Extension\NoStupidDefaultsVideo;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Filters\Video\ResizeFilter;
 use FFMpeg\Format\Video\X264;
+use FFMpeg\Media\Video as FFVideo;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TranscodingService
@@ -20,25 +22,25 @@ class TranscodingService
             "height" => 1080,
             "crf" => 23,
             "playlistResolution" => "1920x1080",
-            "playlistBandwidth" => "800000",
+            "maxBandwidth" => 6000000,
         ],
         [
             "height" => 720,
             "crf" => 23,
             "playlistResolution" => "1280x720",
-            "playlistBandwidth" => "1400000",
+            "maxBandwidth" => 3000000,
         ],
         [
             "height" => 480,
             "crf" => 23,
             "playlistResolution" => "842x480",
-            "playlistBandwidth" => "2800000",
+            "maxBandwidth" => 1100000,
         ],
         [
             "height" => 360,
             "crf" => 23,
             "playlistResolution" => "640x360",
-            "playlistBandwidth" => "5000000",
+            "maxBandwidth" => 500000,
         ]
     ];
 
@@ -103,17 +105,29 @@ class TranscodingService
             }
 
             $ffvideo = $this->ffmpeg->open($this->rawPath($video->getId()));
+
+            if (!$ffvideo instanceof FFVideo) {
+                $video->setState(Video::FAIL);
+                $this->videoService->update($video);
+                return;
+            }
+
+            $ffvideo = new NoStupidDefaultsVideo($ffvideo);
+
             $ffvideo->filters()->resize(new Dimension(1, $quality["height"]), ResizeFilter::RESIZEMODE_SCALE_WIDTH)->synchronize();
 
             $format = new X264("aac");
             $format->setAdditionalParameters([
                 "-crf", $quality["crf"],
+                //"-maxrate", ($quality["maxBandwidth"] / 1000) . "k",
+                //"-bufsize", "6M",
                 "-hls_segment_filename", $this->contentDir($video->getId()) . $quality["height"] . "p/" . WatchController::TS_FILE_FORMAT,
                 "-hls_playlist_type", "vod",
                 "-keyint_min", "48",
                 "-g", "48",
                 "-sc_threshold", "0",
             ]);
+            $format->setPasses(1);
             $format->on('progress', function ($v, $f, $percentage) use ($i, $total, $video) {
                 $percentage = (($i) * 100.0 + $percentage) / ($total);
                 $video->setTranscodingProgress($percentage);
@@ -129,7 +143,7 @@ class TranscodingService
         $globalPlaylist .= "#EXT-X-VERSION:3\n";
         for ($i = $countQuality - $total; $i < $countQuality; $i++) {
             $quality = self::QUALITY[$i];
-            $globalPlaylist .= "#EXT-X-STREAM-INF:BANDWIDTH=" . $quality["playlistBandwidth"] . ",RESOLUTION=" . $quality["playlistResolution"] . "\n";
+            $globalPlaylist .= "#EXT-X-STREAM-INF:BANDWIDTH=" . $quality["maxBandwidth"] . ",RESOLUTION=" . $quality["playlistResolution"] . "\n";
             $globalPlaylist .= $quality["height"] . "/playlist\n";
         }
 

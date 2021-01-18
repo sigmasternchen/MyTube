@@ -54,6 +54,7 @@
 }
 
 .btn:disabled {
+    color: dimgrey;
 }
 
 a.btn.disabled {

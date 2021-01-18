@@ -47,15 +47,16 @@
       "ext-gd": "*"
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "symfony/browser-kit": "^5.2",
-        "symfony/css-selector": "^5.2",
-        "symfony/debug-bundle": "^5.2",
-        "symfony/maker-bundle": "^1.0",
-        "symfony/phpunit-bridge": "^5.2",
-        "symfony/stopwatch": "^5.2",
-        "symfony/var-dumper": "5.2.*",
-        "symfony/web-profiler-bundle": "^5.2"
+      "doctrine/doctrine-fixtures-bundle": "^3.4",
+      "phan/phan": "^4.0",
+      "symfony/browser-kit": "^5.2",
+      "symfony/css-selector": "^5.2",
+      "symfony/debug-bundle": "^5.2",
+      "symfony/maker-bundle": "^1.0",
+      "symfony/phpunit-bridge": "^5.2",
+      "symfony/stopwatch": "^5.2",
+      "symfony/var-dumper": "5.2.*",
+      "symfony/web-profiler-bundle": "^5.2"
     },
     "config": {
         "optimize-autoloader": true,

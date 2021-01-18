@@ -49,7 +49,7 @@
     white-space: nowrap;
 }
 
-.deleteToggle {
+.btn-link.deleteToggle {
     color: red;
 }
 

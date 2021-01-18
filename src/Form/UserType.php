@@ -20,14 +20,19 @@ class UserType extends AbstractType
     {
         $builder
             ->add("name", TextType::class)
-            ->add("email", EmailType::class)
-            ->add("roles", ChoiceType::class, [
+            ->add("email", EmailType::class);
+
+        if ($options["roles"]) {
+            $builder->add("roles", ChoiceType::class, [
                 "choices" => [
                     "Admin" => User::ROLE_ADMIN
                 ],
                 "multiple" => true,
                 "expanded" => true,
-            ])
+            ]);
+        }
+
+        $builder
             ->add("newPassword", PasswordType::class, [
                 "always_empty" => true,
                 "required" => !$options["password_optional"]
@@ -39,7 +44,8 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             "data_class" => User::class,
-            "password_optional" => false
+            "password_optional" => false,
+            "roles" => true,
         ]);
     }
 

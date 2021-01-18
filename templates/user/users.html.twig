@@ -28,7 +28,9 @@
                 </th>
             </tr>
             {% for user in users %}
-                {% set canEdit = (user.id == current.id) or (user.isSuperAdmin()) %}
+                {% set isSelf = (user.id == current.id) %}
+                {% set canEdit = current.isSuperAdmin() or not user.isSuperAdmin() %}
+                {% set canDelete = not (isSelf or user.isSuperAdmin()) %}
                 <tr>
                     <td>
                         <input type="checkbox">
@@ -53,8 +55,8 @@
                     </td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a class="btn btn-link {% if canEdit %}disabled{% endif %}"
-                               href="{{ path("app_user_edit") }}?user={{ user.customId }}">
+                            <a class="btn btn-link {% if not canEdit %}disabled{% endif %}"
+                               href="{% if isSelf %}{{ path("app_settings") }}{% else %}{{ path("app_user_edit") }}?user={{ user.customId }}{% endif %}">
                                 <i class="fas fa-cog"></i>
                             </a>
                             <form action="{{ path("app_user_delete") }}" method="POST">
@@ -65,7 +67,7 @@
                                         data-mdb-toggle="dropdown"
                                         aria-expanded="false"
                                         onclick=""
-                                        {% if canEdit %}
+                                        {% if not canDelete %}
                                             disabled
                                         {% endif %}
                                 >

@@ -198,7 +198,45 @@ class UserController extends AbstractController
             $okay = true;
         }
 
-        return $this->render("user/user-new.html.twig", [
+        return $this->render("user/user-edit.html.twig", [
+            "ok" => $okay,
+            "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/settings", name="app_settings")
+     */
+    public function settings(Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_USER)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $user = $this->userService->getLoggedInUser();
+
+
+        $form = $this->createForm(UserType::class, $user, [
+            "password_optional" => true,
+            "roles" => false
+        ]);
+
+        $okay = false;
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $roles = $user->getRoles();
+
+            $user = $form->getData();
+
+            $user->setRoles($roles);
+
+            $this->userService->update($user);
+
+            $okay = true;
+        }
+
+        return $this->render("user/settings.html.twig", [
             "ok" => $okay,
             "form" => $form->createView()
         ]);

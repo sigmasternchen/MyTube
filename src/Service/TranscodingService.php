@@ -93,13 +93,20 @@ class TranscodingService
 
     private function transcode(Video $video)
     {
-        $height = $this->ffprobe->streams($this->rawPath($video->getId()))->videos()->first()->getDimensions()->getHeight();
+        $dimensions = $this->ffprobe->streams($this->rawPath($video->getId()))->videos()->first()->getDimensions();
+        $height = $dimensions->getHeight();
+        $width = $dimensions->getWidth();
+
+        $isVertical = $height > $width;
 
         $countQuality = count(self::QUALITY);
         $total = $countQuality;
         $i = 0;
+
+        $vHeight = $isVertical ? $width : $height;
+
         foreach (self::QUALITY as $quality) {
-            if ($quality["height"] > $height) {
+            if ($quality["height"] > $vHeight) {
                 $total--;
                 continue;
             }
@@ -114,7 +121,11 @@ class TranscodingService
 
             $ffvideo = new NoStupidDefaultsVideo($ffvideo);
 
-            $ffvideo->filters()->resize(new Dimension(1, $quality["height"]), ResizeFilter::RESIZEMODE_SCALE_WIDTH)->synchronize();
+            if ($isVertical) {
+                $ffvideo->filters()->resize(new Dimension($quality["height"], 1), ResizeFilter::RESIZEMODE_SCALE_HEIGHT)->synchronize();
+            } else {
+                $ffvideo->filters()->resize(new Dimension(1, $quality["height"]), ResizeFilter::RESIZEMODE_SCALE_WIDTH)->synchronize();
+            }
 
             $format = new X264("aac");
             $format->setAdditionalParameters([
@@ -143,7 +154,12 @@ class TranscodingService
         $globalPlaylist .= "#EXT-X-VERSION:3\n";
         for ($i = $countQuality - $total; $i < $countQuality; $i++) {
             $quality = self::QUALITY[$i];
-            $globalPlaylist .= "#EXT-X-STREAM-INF:BANDWIDTH=" . $quality["maxBandwidth"] . ",RESOLUTION=" . $quality["playlistResolution"] . "\n";
+            if ($isVertical) {
+                $resolution = implode("x", array_reverse(explode("x", $quality["playlistResolution"])));
+            } else {
+                $resolution = $quality["playlistResolution"];
+            }
+            $globalPlaylist .= "#EXT-X-STREAM-INF:BANDWIDTH=" . $quality["maxBandwidth"] . ",RESOLUTION=" . $resolution . "\n";
             $globalPlaylist .= $quality["height"] . "/playlist\n";
         }
 

@@ -98,16 +98,16 @@
                                     </div>
                                 </form>
                             </div>
-                            <h5>{{ video.name }}</h5>
+                            <h5 class="text-truncate">{{ video.name }}</h5>
                             <div class="views">
                                 {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
                             </div>
                             <div class="length">
                                 {{ video.getFormatedLength() }}
                             </div>
-                            <p>
+                            <div class="description text-truncate">
                                 {{ video.description }}
-                            </p>
+                            </div>
                         </div>
                         {% if disabled %}
                             <script>

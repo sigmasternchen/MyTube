@@ -58,6 +58,7 @@
 
 .info {
     padding: 2% 4% 4%;
+    height: 31%;
 }
 
 .disable {
@@ -134,4 +135,23 @@
 
 .length {
     top: calc(9 / 16 * 100% + 4% + 5%);
+}
+
+h5 {
+    max-width: 80%;
+}
+
+.description {
+    position: relative;
+    height: 50%;
+    width: 90%;
+    white-space: normal;
+}
+
+.description:after {
+    content: '...';
+    background: inherit;
+    position: absolute;
+    bottom: -5px;
+    right: 0;
 }

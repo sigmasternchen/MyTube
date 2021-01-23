@@ -154,11 +154,8 @@ class TranscodingService
         $globalPlaylist .= "#EXT-X-VERSION:3\n";
         for ($i = $countQuality - $total; $i < $countQuality; $i++) {
             $quality = self::QUALITY[$i];
-            if ($isVertical) {
-                $resolution = implode("x", array_reverse(explode("x", $quality["playlistResolution"])));
-            } else {
-                $resolution = $quality["playlistResolution"];
-            }
+            $resolution = $quality["playlistResolution"];
+
             $globalPlaylist .= "#EXT-X-STREAM-INF:BANDWIDTH=" . $quality["maxBandwidth"] . ",RESOLUTION=" . $resolution . "\n";
             $globalPlaylist .= $quality["height"] . "/playlist\n";
         }

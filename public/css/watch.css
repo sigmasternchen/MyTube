@@ -31,23 +31,50 @@
 }
 
 .user {
+    position: absolute;
 }
 
 .user img {
-    height: 3vw;
-    margin-right: 1vw;
-}
-
-.user span {
-    font-size: 1vw;
+    position: absolute;
+    left: 1.5vw;
 }
 
 h2 {
-    position: absolute;
-    top: 1vw;
-    left: 10vw;
+    margin-top: 2vw;
 }
 
-.description {
+.indented {
     margin-left: 4vw;
+}
+
+@media only screen and (max-width: 1500px) {
+    .user img {
+        left: auto;
+    }
+}
+
+@media only screen and (max-width: 1050px) {
+    h2 {
+        margin-top: 3vw;
+    }
+}
+
+@media only screen and (max-width: 780px) {
+    h2 {
+        margin-top: 4vw;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+    h2 {
+        margin-top: 5vh;
+    }
+
+    .indented {
+        margin-left: 0;
+    }
+
+    .user span {
+        margin-left: 40px;
+    }
 }

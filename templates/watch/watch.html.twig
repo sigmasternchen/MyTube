@@ -73,13 +73,13 @@
                             class="rounded-circle avatar"
                             alt=""
                     />
-                    <span>{{ video.uploader.name }}</span>
+                    <span class="fs-6 indented">{{ video.uploader.name }}</span>
                 </div>
-                <h2>{{ video.name }}</h2>
+                <h2 class="indented">{{ video.name }}</h2>
                 <div class="views">
                     {{ video.views }} {{ video.views == 1 ? "View" : "Views" }}
                 </div>
-                <div class="description">
+                <div class="description indented">
                     {{ video.description }}
                 </div>
             </div>

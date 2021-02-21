@@ -4,13 +4,16 @@
 namespace App\Controller;
 
 
+use App\Entity\Set;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Entity\VideoLink;
+use App\Form\SetType;
 use App\Form\VideoLinkType;
 use App\Form\VideoType;
 use App\Mapper\CustomUuidMapper;
 use App\Service\LoggingService;
+use App\Service\SetService;
 use App\Service\UserService;
 use App\Service\VideoLinkService;
 use App\Service\VideoService;
@@ -28,10 +31,13 @@ class DashboardController extends AbstractController
 {
     public const DELETE_VIDEO_CSRF_TOKEN_ID = "delete-video";
     public const DELETE_LINK_CSRF_TOKEN_ID = "delete-link";
+    public const DELETE_SET_CSRF_TOKEN_ID = "delete-set";
+    public const EDIT_SET_CSRF_TOKEN_ID = "edit-set";
 
     private $userService;
     private $videoService;
     private $videoLinkService;
+    private $setService;
     private $loggingService;
 
     private $uuidMapper;
@@ -40,6 +46,7 @@ class DashboardController extends AbstractController
         UserService $userService,
         VideoService $videoService,
         VideoLinkService $videoLinkService,
+        SetService $setService,
         LoggingService $loggingService,
         CustomUuidMapper $uuidMapper
     )
@@ -47,6 +54,7 @@ class DashboardController extends AbstractController
         $this->userService = $userService;
         $this->videoService = $videoService;
         $this->videoLinkService = $videoLinkService;
+        $this->setService = $setService;
         $this->loggingService = $loggingService;
         $this->uuidMapper = $uuidMapper;
     }
@@ -373,6 +381,156 @@ class DashboardController extends AbstractController
         return $this->render("dashboard/link-edit.html.twig", [
             "video" => $video,
             "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/sets", name="app_sets")
+     */
+    public function showSets(): Response
+    {
+        if (!$this->isGranted(User::ROLE_USER)) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $user = $this->userService->getLoggedInUser();
+        $sets = $this->setService->getAll($user);
+
+        foreach ($sets as $set) {
+            $set->setCustomId($this->uuidMapper->toString($set->getId()));
+        }
+
+        return $this->render("dashboard/sets.html.twig", [
+            "sets" => $sets
+        ]);
+    }
+
+    /**
+     * @Route("/sets/create", name="app_create_set")
+     */
+    public function createSet(Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_USER)) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        $set = new Set();
+        $form = $this->createForm(SetType::class, $set);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $set = $form->getData();
+
+            $this->setService->add($set);
+
+            return $this->redirectToRoute("app_sets");
+        }
+
+        return $this->render("dashboard/set-new.html.twig", [
+            "form" => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/sets/delete", name="app_delete_set", methods={"POST"})
+     */
+    public function deleteSet(Request $request): Response
+    {
+        $token = $request->request->get("csrfToken");
+        $setId = $request->request->get("setId");
+
+        if (!$this->isCsrfTokenValid(self::DELETE_SET_CSRF_TOKEN_ID, $token)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        if (!$setId) {
+            throw new BadRequestHttpException();
+        }
+
+        try {
+            $setId = $this->uuidMapper->fromString($setId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $set = $this->setService->get($setId);
+        if ($set == null || $set->getCreator() != $this->userService->getLoggedInUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->setService->delete($set);
+
+        return $this->redirectToRoute("app_sets");
+    }
+
+    /**
+     * @Route("/sets/{setId}", name="app_edit_set")
+     */
+    public function editSet($setId, Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_USER)) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        try {
+            $setId = $this->uuidMapper->fromString($setId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $set = $this->setService->get($setId);
+
+        $form = $this->createForm(SetType::class, $set);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $set = $form->getData();
+
+            $this->setService->update($set);
+        }
+
+        $set->setCustomId($this->uuidMapper->toString($set->getId()));
+
+        return $this->render("dashboard/set-edit.html.twig", [
+            "form" => $form->createView(),
+            "set" => $set
+        ]);
+    }
+
+    /**
+     * @Route("/sets/{setId}/add", name="app_edit_set_add")
+     */
+    public function editSetAdd($setId, Request $request): Response
+    {
+        if (!$this->isGranted(User::ROLE_USER)) {
+            // not logged in
+            return $this->redirectToRoute("app_login");
+        }
+
+        try {
+            $setId = $this->uuidMapper->fromString($setId);
+        } catch (ConversionException $e) {
+            throw new BadRequestHttpException();
+        }
+
+        $set = $this->setService->get($setId);
+
+        $user = $this->userService->getLoggedInUser();
+
+        $videos = $this->videoService->getVideos($user);
+
+        $videos = array_udiff($videos, $set->getVideos()->getValues(), function ($a, $b) {
+            return $a->getId()->compareTo($b->getId());
+        });
+
+        foreach ($videos as $video) {
+            $video->setCustomId($this->uuidMapper->toString($video->getId()));
+        }
+
+        return $this->render("dashboard/set-edit-add.html.twig", [
+            "set" => $set,
+            "videos" => $videos
         ]);
     }
 }

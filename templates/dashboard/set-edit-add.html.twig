@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sets{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/sets.css") }}">
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset("js/search.js") }}"></script>
+    <script>
+        (function () {
+            let elements = document.getElementsByClassName("video");
+            let contents = [];
+
+            for (let i = 0; i < elements.length; i++) {
+                contents.push(elements[i].attributes["data-content"].textContent);
+            }
+
+            search(document.getElementById("search-bar"), elements, contents);
+        })();
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="bg-light shadow-5">
+        <div class="videos">
+            <div class="search">
+                <input id="search-bar" type="text" placeholder="Search" class="form-control">
+            </div>
+            <div class="list">
+                <ul>
+                    {% for video in videos %}
+                        <li class="video" data-content="{{ video.name }}">
+                            <a class="dropdown-item" href="#">
+                                <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                                    linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                    videoId: video.customId
+                                }) }}"/>
+                                {{ video.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <button
+        </div>
+    </div>
+{% endblock %}

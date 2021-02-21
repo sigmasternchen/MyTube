@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sets{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/sets.css") }}">
+{% endblock %}
+
+{% block body %}
+    <div class="bg-light shadow-5">
+    <h2>Edit Set</h2>
+    <div class="rename">
+        {{ form_start(form) }}
+        {{ form_widget(form.name) }}
+        {{ form_widget(form.submit, { 'label': 'rename' }) }}
+        {{ form_end(form) }}
+    </div>
+    <div>
+        {% set editCsrfToken = csrf_token(constant("App\\Controller\\DashboardController::EDIT_SET_CSRF_TOKEN_ID")) %}
+        <div class="links bg-light shadow-5">
+            <table class="table table-hover">
+                <tr>
+                    <td>#</td>
+                    <th>
+                        Video
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+                {% for video in set.videos %}
+                    <tr>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+                        <td>
+                            <a href="{{ path("app_watch_page", {
+                                linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                videoId: video.customId
+                            }) }}">
+                                <img alt="Thumbnail" src="{{ path("app_watch_thumbnail", {
+                                    linkId: constant("App\\Controller\\WatchController::OWNER_LINK_ID"),
+                                    videoId: video.customId
+                                }) }}"/>
+                                {{ video.name }}
+                            </a>
+                        </td>
+                        <td class="no-wrap">
+                            <div class="btn-group" role="group">
+                                <form action="" method="POST">
+                                    <input type="hidden" name="videoId" value="{{ video.customId }}">
+                                    <input type="hidden" name="csrfToken" value="{{ editCsrfToken }}">
+                                    <button class="btn btn-link dropdown-toggle deleteToggle" style="color: red;"
+                                            id="{{ video.customId }}-deleteDropDown"
+                                            data-mdb-toggle="dropdown"
+                                            aria-expanded="false"
+                                            onclick="">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end deleteConfirm"
+                                         id="{{ video.customId }}-deleteDropDownMenu"
+                                         aria-labelledby="{{ video.customId }}-deleteDropDown">
+                                        Do you really want to delete this video from this set?<br/>
+                                        <button class="btn btn-link deleteButton">YES</button>
+                                        <button class="btn btn-primary" onclick="removeClass('show', [
+                                                '#{{ video.customId }}-deleteDropDown',
+                                                '#{{ video.customId }}-deleteDropDownMenu'
+                                                ]); return false;">NO
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="addButton">
+        <a type="button" class="btn btn-primary btn-floating"
+           href="{{ path("app_edit_set_add", {"setId": set.customId}) }}">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+{% endblock %}

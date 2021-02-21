@@ -1,0 +1,21 @@
+.rename {
+    white-space: nowrap;
+}
+
+.rename input[type=text] {
+    width: 20%;
+    display: inline-block;
+}
+
+.rename button {
+    display: inline-block;
+}
+
+.videos .list img {
+    height: 40px;
+}
+
+.list {
+    max-height: 400px;
+    overflow-y: scroll;
+}

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VideoRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\UuidInterface;
@@ -73,9 +74,15 @@ class Video
 
     private $views = 0;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Set::class, mappedBy="videos")
+     */
+    private $sets;
+
     public function __construct()
     {
         $this->videoLinks = new ArrayCollection();
+        $this->sets = new ArrayCollection();
     }
 
     public function getId(): ?UuidInterface
@@ -241,6 +248,33 @@ class Video
     public function setViews(int $views): self
     {
         $this->views = $views;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Set[]
+     */
+    public function getSets(): Collection
+    {
+        return $this->sets;
+    }
+
+    public function addSet(Set $set): self
+    {
+        if (!$this->sets->contains($set)) {
+            $this->sets[] = $set;
+            $set->addVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSet(Set $set): self
+    {
+        if ($this->sets->removeElement($set)) {
+            $set->removeVideo($this);
+        }
+
         return $this;
     }
 }

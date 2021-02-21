@@ -64,6 +64,11 @@ class VideoLink
      */
     private $comment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Set::class)
+     */
+    private $sets;
+
     public function getId(): ?UuidInterface
     {
         return $this->id;
@@ -206,5 +211,17 @@ class VideoLink
         }
 
         return true;
+    }
+
+    public function getSets(): ?Set
+    {
+        return $this->sets;
+    }
+
+    public function setSets(?Set $sets): self
+    {
+        $this->sets = $sets;
+
+        return $this;
     }
 }

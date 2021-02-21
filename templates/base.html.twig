@@ -48,6 +48,11 @@
                                aria-current="page"
                                href="{{ path("app_links") }}">Links</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if route_name == "app_sets" %} active {% endif %}"
+                               aria-current="page"
+                               href="{{ path("app_sets") }}">Sets</a>
+                        </li>
                     {% endif %}
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item">

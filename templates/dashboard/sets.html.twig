@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sets{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("css/sets.css") }}">
+{% endblock %}
+
+{% block body %}
+    {% if sets | length == 0 %}
+        <div class="no-content">
+            No sets yet.<br/>
+            Go <a href="{{ path("app_create_set") }}">here</a> to add a new set.
+        </div>
+    {% else %}
+        {% set deleteCsrfToken = csrf_token(constant("App\\Controller\\DashboardController::DELETE_SET_CSRF_TOKEN_ID")) %}
+        <div class="bg-light shadow-5">
+            <table class="table table-hover">
+                <tr>
+                    <td></td>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        # Videos
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+                {% for set in sets %}
+                    <tr>
+                        <td></td>
+                        <td>
+                            {{ set.name }}
+                        </td>
+                        <td>
+                            {{ set.created | date("Y-m-d") }}
+                        </td>
+                        <td>
+                            {{ set.videos | length }}
+                        </td>
+                        <td class="no-wrap">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-link" href="{{ path("app_edit_set", {"setId": set.customId}) }}">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                                <form action="{{ path("app_delete_set") }}" method="POST">
+                                    <input type="hidden" name="setId" value="{{ set.customId }}">
+                                    <input type="hidden" name="csrfToken" value="{{ deleteCsrfToken }}">
+                                    <button class="btn btn-link dropdown-toggle deleteToggle" style="color: red;"
+                                            id="{{ set.customId }}-deleteDropDown"
+                                            data-mdb-toggle="dropdown"
+                                            aria-expanded="false"
+                                            onclick="">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end deleteConfirm"
+                                         id="{{ set.customId }}-deleteDropDownMenu"
+                                         aria-labelledby="{{ set.customId }}-deleteDropDown">
+                                        Do you really want to delete this set?<br/>
+                                        <button class="btn btn-link deleteButton">YES</button>
+                                        <button class="btn btn-primary" onclick="removeClass('show', [
+                                                '#{{ set.customId }}-deleteDropDown',
+                                                '#{{ set.customId }}-deleteDropDownMenu'
+                                                ]); return false;">NO
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="addButton">
+            <a type="button" class="btn btn-primary btn-floating" href="{{ path("app_create_set") }}">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
